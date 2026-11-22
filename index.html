@@ -2,14 +2,15 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#08121e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MT FIT">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>MT FIT | Kişisel Sağlık Paneli</title>
+<meta name="application-name" content="MT FIT">
+<meta name="description" content="MT FIT kişisel gelişim ve alışkanlık takip uygulaması">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<title>MT FIT | Personal Wellness</title>
 <style>
 :root{--bg:#0a101c;--side:#0d1726;--panel:#121e30;--panel2:#17263a;--line:#26384f;--txt:#edf4ff;--muted:#91a4bd;--green:#39d39a;--blue:#68aaff;--amber:#f3bd69;--red:#ff7185}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
@@ -20,58 +21,84 @@
 @media(max-width:950px){.app{grid-template-columns:75px 1fr}.sidebar{padding:18px 9px}.brand{justify-content:center;padding:0}.brand .brandtext,.navlabel,.nav button .navtext,.sidebottom{display:none}.nav button{justify-content:center;padding:12px 4px}.nav .ico{font-size:18px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.app{display:block}.sidebar{position:sticky;top:0;z-index:5;height:auto;padding:7px 9px;border-right:0;border-bottom:1px solid var(--line);display:block}.brand{display:none}.nav{display:flex;justify-content:space-around;gap:2px}.nav button{flex:1;display:grid;gap:1px;padding:7px 2px;font-size:10px}.nav button .navtext{display:block;font-size:9px}.nav .ico{font-size:15px;width:auto}.topbar{height:48px;padding:0 14px}.content{padding:19px 13px 35px}.pagehead{align-items:flex-start;flex-direction:column}.pagehead h1{font-size:24px}.cards{gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.tasklist{grid-template-columns:1fr}.panel{padding:14px}.status{font-size:10px}}
 
-/* MT FIT premium login + responsive app identity */
-.login-screen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,#173b3a 0%,#0a101c 55%,#070c14 100%)}
-.login-card{width:min(100%,420px);padding:34px;border:1px solid #2b4558;border-radius:24px;background:rgba(14,25,40,.94);box-shadow:0 28px 90px #0009;text-align:center}
-.login-brand{display:flex;justify-content:center;align-items:center;gap:13px;margin-bottom:25px}
-.mt-logo{width:62px;height:62px;border-radius:19px;background:linear-gradient(145deg,#72f0bd,#17a77e 70%,#08735c);display:grid;place-items:center;color:#05271d;font-size:25px;font-weight:1000;letter-spacing:-2px;box-shadow:0 10px 30px #21c48b40}
-.login-brand strong{display:block;font-size:23px;letter-spacing:.14em;text-align:left}
-.login-brand small{display:block;color:#91a4bd;font-size:10px;letter-spacing:.23em;text-align:left;margin-top:2px}
-.login-card h1{font-size:23px;margin:0 0 5px}.login-card .login-sub{color:#91a4bd;margin:0 0 24px;font-size:13px}
-.login-field{text-align:left;margin:13px 0}.login-field label{display:block;color:#b5c5d8;font-size:12px;margin-bottom:7px}
-.login-field input{width:100%;border:1px solid #2b4057;background:#0a1422;color:#edf4ff;border-radius:11px;padding:13px 14px;outline:none}
-.login-field input:focus{border-color:#39d39a;box-shadow:0 0 0 3px #39d39a20}
-.login-submit{width:100%;border:0;border-radius:11px;padding:13px;margin-top:12px;background:linear-gradient(90deg,#39d39a,#71e7b8);color:#05251b;font-weight:900}
-.login-error{min-height:20px;color:#ff8b9b;font-size:12px;margin-top:10px}
-.login-foot{color:#7288a2;font-size:10px;margin-top:18px}
-.app{display:none}.app.unlocked{display:grid}
-.nav button .ico{width:23px;height:23px;border-radius:8px;background:#1b3044;display:inline-grid;place-items:center;font-size:14px;flex-shrink:0}
-.nav button.active .ico{background:#245944;color:#a8f3d2}
-@media(max-width:760px){.login-card{padding:27px 22px}.app{grid-template-columns:1fr!important}.sidebar{padding:12px!important;gap:10px!important;border-right:0!important;border-bottom:1px solid var(--line)}.sidebar .nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.sidebar .nav button{padding:8px 4px;justify-content:center;flex-direction:column;gap:3px;font-size:10px;text-align:center}.sidebar .nav .ico{width:25px;height:25px}.sidebar .navlabel,.sidebottom{display:none}.brand{padding:2px 5px}.topbar{height:55px;padding:0 14px}.content{padding:18px 13px 35px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.pagehead h1{font-size:24px}.tasklist{grid-template-columns:1fr}}
+/* MT FIT premium layer */
+:root{--green:#50e0ae;--blue:#7db8ff;--bg:#07111d;--panel:#101e2e;--line:#24394f}
+body{background:radial-gradient(ellipse at 12% 0%,#102a35 0,transparent 36%),var(--bg)}
+.logo{box-shadow:0 8px 24px #26c58a33;border:1px solid #79edc055}
+.metric,.panel{box-shadow:0 12px 35px #00000018;transition:transform .22s,border-color .22s}
+.metric:hover,.panel:hover{border-color:#3c6a68}
+.btn{transition:transform .16s,filter .16s}
+.btn:active{transform:scale(.97)}
+.progress span{background:linear-gradient(90deg,#21b883,#8af4ca);box-shadow:0 0 14px #39d39a66}
+.water-wave{position:relative;overflow:hidden}
+.water-wave:after{content:"";position:absolute;left:-30%;top:-9px;width:160%;height:18px;border-radius:50%;background:#72e9ce33;animation:wave 3.4s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:translateX(-7%) rotate(-2deg)}50%{transform:translateX(7%) rotate(2deg)}}
+@keyframes pop{0%{transform:scale(.92);opacity:.5}100%{transform:scale(1);opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.view.active{animation:rise .28s ease both}
+.water-burst{animation:pop .35s ease}
+.login-screen{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 50% 0%,#164b4b 0,transparent 42%),#06101c}
+.login-card{width:min(440px,100%);padding:30px;border:1px solid #31556a;background:linear-gradient(145deg,#13283a,#0b1726);border-radius:24px;box-shadow:0 30px 100px #0009;animation:rise .35s ease}
+.login-brand{display:grid;justify-items:center;gap:9px;margin-bottom:24px}
+.login-logo{width:76px;height:76px;border-radius:23px;display:grid;place-items:center;background:linear-gradient(145deg,#60e8b4,#148467);color:#06241b;font-size:29px;font-weight:950;box-shadow:0 12px 35px #39d39a44}
+.login-brand h1{margin:0;letter-spacing:.18em;font-size:22px}.login-brand p{margin:0;color:#8fa9bf;font-size:11px;letter-spacing:.18em}
+.login-card label{display:block;color:#a7bbcd;font-size:12px;margin:13px 0 6px}
+.login-card input{width:100%;padding:13px 14px;border-radius:11px;background:#081523;border:1px solid #29435b;color:#eff8ff;outline:none}
+.login-card input:focus{border-color:#50e0ae;box-shadow:0 0 0 3px #50e0ae1b}
+.login-card .btn{width:100%;margin-top:18px;padding:12px}
+.login-error{color:#ff9dab;min-height:18px;font-size:12px;margin-top:10px}
+.login-foot{text-align:center;color:#71889f;font-size:11px;margin-top:18px}
+.admin-only{display:none}
+.admin-wrap{max-width:1050px;margin:0 auto}
+.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.admin-stat{padding:16px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#14263a,#0e1a2a)}
+.admin-stat b{display:block;font-size:25px;margin-top:6px}
+.admin-form{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.admin-form input{min-width:140px;flex:1;padding:10px;border-radius:9px;background:#091625;border:1px solid var(--line);color:var(--txt)}
+.user-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.user-pill{font-size:10px;border-radius:20px;padding:4px 9px;background:#12382e;color:#9af0ce}
+.user-pill.off{background:#3b2530;color:#ffc1cc}
+.chart-wrap{height:210px;position:relative;margin-top:12px}
+.chart-wrap svg{width:100%;height:100%;overflow:visible}
+.chart-grid{stroke:#2a3e53;stroke-width:1;stroke-dasharray:4 5}
+.chart-line{fill:none;stroke:#50e0ae;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.chart-area{fill:url(#chartFill);opacity:.23}
+.chart-dot{fill:#8af4ca;stroke:#0d1d2c;stroke-width:2}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mobile-hide{display:inline}
+@media(max-width:650px){.login-card{padding:23px}.admin-grid{grid-template-columns:1fr 1fr}.user-row{align-items:flex-start;flex-direction:column}.mobile-hide{display:none}}
 </style>
 </head>
 <body>
 <div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <div class="login-brand">
-      <div class="mt-logo">MT</div>
-      <div><strong>MT FIT</strong><small>PERSONAL WELLNESS</small></div>
-    </div>
-    <h1>Tekrar hoş geldin</h1>
-    <p class="login-sub">Kişisel gelişim paneline giriş yap</p>
-    <form id="loginForm">
-      <div class="login-field"><label for="loginUser">Kullanıcı adı</label><input id="loginUser" autocomplete="username" placeholder="Kullanıcı adın" required></div>
-      <div class="login-field"><label for="loginPass">Şifre</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Şifren" required></div>
-      <button class="login-submit" type="submit">GİRİŞ YAP&nbsp; →</button>
-      <div class="login-error" id="loginError"></div>
-    </form>
-    <div class="login-foot">MT FIT · KENDİNİN EN İYİ HALİNE DOĞRU</div>
-  </div>
+ <div class="login-card">
+  <div class="login-brand"><div class="login-logo">MT</div><h1>MT FIT</h1><p>PERSONAL WELLNESS PLATFORM</p></div>
+  <form id="loginForm">
+   <label for="loginUsername">Kullanıcı adı</label><input id="loginUsername" autocomplete="username" placeholder="Kullanıcı adını gir" required>
+   <label for="loginPassword">Şifre</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Şifreni gir" required>
+   <button class="btn primary" type="submit">Giriş yap&nbsp; →</button>
+   <div class="login-error" id="loginError"></div>
+  </form>
+  <div class="login-foot">MT FIT · Sağlıklı yaşam, ölçülebilir ilerleme</div>
+ </div>
 </div>
-
-<div class="app">
+<div class="app" id="mainApp" style="display:none">
 <aside class="sidebar">
  <div class="brand"><div class="logo">MT</div><div class="brandtext"><b>MT FIT</b><small>PERSONAL TRACKER</small></div></div>
  <div><div class="navlabel">ÇALIŞMA ALANI</div><nav class="nav">
-  <button class="active" data-view="dashboard"><span class="ico">⌂</span><span class="navtext">Genel Bakış</span></button>
+  <button class="active" data-view="dashboard"><span class="ico">▦</span><span class="navtext">Genel Bakış</span></button>
   <button data-view="daily"><span class="ico">✓</span><span class="navtext">Günlük Takip</span></button>
-  <button data-view="measure"><span class="ico">⚖</span><span class="navtext">Ölçümlerim</span></button>
-  <button data-view="plan"><span class="ico">▣</span><span class="navtext">Programım</span></button>
+  <button data-view="measure"><span class="ico">⌁</span><span class="navtext">Ölçümlerim</span></button>
+  <button data-view="plan"><span class="ico">▤</span><span class="navtext">Programım</span></button>
+  <button data-view="admin" id="adminNav" style="display:none"><span class="ico">♙</span><span class="navtext">Yönetim</span></button>
  </nav></div>
  <div class="sidebottom">30 GÜNLÜK HEDEF<br><b style="color:#eaf5ff">Düzenli hareket · Dengeli beslenme</b><br><span id="sideProgress">0 / 30 gün tamamlandı</span></div>
 </aside>
 <main class="main">
- <div class="topbar"><div class="crumb">MT FIT <span style="color:#52677f">/</span> <b id="crumb">Genel Bakış</b></div><div class="topright"><div class="undoarea"><button class="btn" id="undoBtn" disabled title="Son işlemi geri al">↶ Geri al</button><span class="undohelp" id="undoLabel">Henüz işlem yok</span></div><span class="status">● Cihazda kayıt açık</span><div class="avatar">M</div></div></div>
+ <div class="topbar"><div class="crumb">MT FIT <span style="color:#52677f">/</span> <b id="crumb">Genel Bakış</b></div><div class="topright"><div class="undoarea"><button class="btn" id="undoBtn" disabled title="Son işlemi geri al">↶ Geri al</button><span class="undohelp" id="undoLabel">Henüz işlem yok</span></div><span class="status" id="syncStatus">● Bu cihazda kayıt</span>
+ <button class="btn" id="changePassBtn" style="padding:7px 10px">Şifre</button>
+ <button class="btn" id="logoutBtn" style="padding:7px 10px">Çıkış</button>
+ <div class="avatar" id="userAvatar">M</div></div></div>
  <div class="content">
   <section class="view active" id="dashboard">
    <div class="pagehead"><div><div class="eyebrow">KİŞİSEL SAĞLIK PANELİ</div><h1>Hoş geldin 👋</h1><p class="sub">Bugün küçük bir adım, 30 gün sonunda güçlü bir alışkanlık.</p></div><button class="btn primary" onclick="go('daily')">Bugünkü görevler →</button></div>
@@ -88,6 +115,8 @@
      <div class="progressrow"><span class="muted">Başlangıç</span><b id="progressText">0 / 30 gün</b><span class="muted">Hedef</span></div>
      <div class="panelhead" style="margin-top:22px"><h2>Gün takvimi</h2><span class="muted">Bir güne dokun</span></div>
      <div class="weekgrid" id="calendar"></div>
+     <div class="panelhead" style="margin-top:22px"><h2>İlerleme grafiği</h2><span class="muted">30 gün</span></div>
+     <div class="chart-wrap" id="progressChart" aria-label="Günlük tamamlanan görev grafiği"></div>
     </div>
     <div class="panel">
      <div class="panelhead"><h2>Bugünün özeti</h2><span class="muted" id="todayLabel">1. Gün</span></div>
@@ -152,19 +181,55 @@
     <div class="notice">İlk hafta hafif başla. Ağrı, baş dönmesi veya olağandışı nefes darlığında egzersizi bırak. Göbeğin sert, ağrılı veya yeni gelişen biçimde şişse sağlık uzmanına danış.</div>
    </div>
   </section>
+  <section class="view" id="admin">
+   <div class="pagehead"><div><div class="eyebrow">MT FIT CONTROL CENTER</div><h1>Yönetim Paneli</h1><p class="sub">Kullanıcı hesaplarını yönet. Kişisel sağlık kayıtları yöneticiye gösterilmez.</p></div></div>
+   <div class="admin-wrap">
+    <div class="admin-grid">
+     <div class="admin-stat"><span class="muted">Toplam hesap</span><b id="adminTotal">1</b></div>
+     <div class="admin-stat"><span class="muted">Aktif hesap</span><b id="adminActive">1</b></div>
+     <div class="admin-stat"><span class="muted">Pasif hesap</span><b id="adminInactive">0</b></div>
+    </div>
+    <div class="panel">
+     <div class="panelhead"><h2>＋ Yeni kullanıcı ekle</h2><span class="muted">En az 6 karakter şifre</span></div>
+     <div class="admin-form"><input id="newUsername" autocomplete="off" placeholder="Kullanıcı adı"><input id="newPassword" type="password" placeholder="Geçici şifre (min. 6)"><button class="btn primary" id="addUserBtn">Kullanıcı oluştur</button></div>
+     <p class="muted" id="adminMessage" style="font-size:12px;min-height:18px"></p>
+    </div>
+    <div class="panel" style="margin-top:14px">
+     <div class="panelhead"><h2>Hesaplar</h2><span class="muted">Sağlık verileri gizlidir</span></div>
+     <div id="userList"></div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+     <div class="panelhead"><h2>Yönetici güvenliği</h2></div>
+     <p class="muted" style="font-size:12px">Yönetici hesabının şifresini buradan değiştirebilirsin. En az 6 karakter kullan.</p>
+     <div class="admin-form"><input id="adminNewPass" type="password" placeholder="Yeni admin şifresi"><input id="adminConfirmPass" type="password" placeholder="Yeni şifre tekrar"><button class="btn primary" id="adminPassBtn">Admin şifresini değiştir</button></div>
+     <p class="muted" id="adminPassMessage" style="font-size:12px"></p>
+    </div>
+   </div>
+  </section>
   <div class="panel" style="margin-top:15px">
-   <div class="panelhead"><div><h2>Veri yedekleme</h2><div class="muted" style="font-size:11px;margin-top:3px">Verilerin bu tarayıcıda saklanır.</div></div></div>
+   <div class="panelhead"><div><h2>Veri yedekleme</h2><div class="muted" style="font-size:11px;margin-top:3px">Verilerin bu kullanıcı hesabı için bu tarayıcıda saklanır.</div></div></div>
    <div class="formrow"><button class="btn" id="export">Yedeği indir</button><label class="btn" style="display:inline-flex;align-items:center">Yedek içe aktar<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label><button class="btn danger" id="reset">Verileri sıfırla</button></div>
-   <div class="foot">Bu sürümde telefon ve bilgisayar arasında otomatik bulut senkronizasyonu bulunmuyor. Cihazlar arasında veri taşımak için yedek indirip diğer cihazda içe aktarabilirsin. Otomatik senkronizasyon için ayrıca güvenli bir bulut veritabanı bağlantısı kurulması gerekir.</div>
+   <div class="foot">Bu tek dosyalı sürümde kullanıcı hesapları ve veriler bu tarayıcıda saklanır; telefon-bilgisayar bulut senkronizasyonu henüz bağlı değildir. Cihazlar arasında veri taşımak için yedek indirip diğer cihazda içe aktarabilirsin. Otomatik senkronizasyon için ayrıca güvenli bir bulut veritabanı bağlantısı kurulması gerekir.</div>
   </div>
   <div class="foot">MT FIT · Kişisel takip paneli · Sağlıklı ve sürdürülebilir ilerleme</div>
  </div>
 </main>
 </div>
+<div id="passwordModal" class="login-screen" style="display:none;z-index:1100">
+ <div class="login-card">
+  <div class="login-brand"><div class="login-logo">MT</div><h1>ŞİFRE GÜNCELLE</h1><p>HESAP GÜVENLİĞİ</p></div>
+  <label for="modalNewPass">Yeni şifre</label><input id="modalNewPass" type="password" placeholder="En az 6 karakter">
+  <label for="modalConfirmPass">Yeni şifre tekrar</label><input id="modalConfirmPass" type="password" placeholder="Yeni şifreyi tekrar gir">
+  <button class="btn primary" id="modalSavePass">Şifreyi kaydet</button>
+  <div class="login-error" id="modalPassError"></div>
+ </div>
+</div>
 <script>
-const KEY='belTakip30_v1';
+const KEY_PREFIX='MT_FIT_DATA_V2_';
+let KEY=KEY_PREFIX+'guest';
+'belTakip30_v1';
 const taskData=[['Yürüyüş','Bu haftanın günlük yürüyüş süresini tamamla'],['Proteinli öğünler','Ana öğünlerde yumurta, yoğurt, et, tavuk, balık veya baklagil'],['Sebze / salata','En az iki öğünde sebze veya salata'],['Porsiyon kontrolü','Aşırı yemeden, aç kalmadan dengeli beslen'],['Su','Gün içine yayarak yeterli su iç'],['Kuvvet egzersizi','Planlı kuvvet günüyse egzersiz; değilse dinlenme'],['Uyku','7–9 saat uyumayı hedefle']];
-let data=readData(),selected=1;
+let data={days:{},measurements:[]},selected=1;
 const undoStack=[];
 function recordUndo(label){undoStack.push({snapshot:JSON.stringify(data),label});if(undoStack.length>30)undoStack.shift();updateUndoUI()}
 function updateUndoUI(){const b=document.getElementById('undoBtn'),l=document.getElementById('undoLabel');if(!b||!l)return;b.disabled=!undoStack.length;l.textContent=undoStack.length?('Son işlem: '+undoStack[undoStack.length-1].label):'Henüz işlem yok'}
@@ -173,7 +238,7 @@ function readData(){try{return JSON.parse(localStorage.getItem(KEY))||{days:{},m
 function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
 function day(n){return data.days[n]||{}}
 function completedDays(){let c=0;for(let i=1;i<=30;i++)if(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5)c++;return c}
-function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));let names={dashboard:'Genel Bakış',daily:'Günlük Takip',measure:'Ölçümlerim',plan:'Programım'};document.getElementById('crumb').textContent=names[id];window.scrollTo({top:0,behavior:'smooth'});if(id==='daily')renderDaily()}
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));let names={dashboard:'Genel Bakış',daily:'Günlük Takip',measure:'Ölçümlerim',plan:'Programım',admin:'Yönetim'};document.getElementById('crumb').textContent=names[id];window.scrollTo({top:0,behavior:'smooth'});if(id==='daily')renderDaily()}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
 function renderCalendar(){let el=document.getElementById('calendar');el.innerHTML='';for(let i=1;i<=30;i++){let x=document.createElement('button');x.className='daycell'+(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5?' done':'')+(i===selected?' sel':'');x.textContent=i+(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5?' ✓':'');x.onclick=()=>{selected=i;go('daily');render()};el.append(x)}}
 function renderDaily(){
@@ -194,13 +259,24 @@ function renderDaily(){
  let count=Object.values(d).filter((v,k)=>k!=='activity'&&v===true).length;let phase=selected<=7?'Alışma dönemi':selected<=14?'Düzen oluşturma':selected<=21?'Temponu artırma':'Devamlılık dönemi';document.getElementById('daySubtitle').textContent=selected+'. gün · '+phase;document.getElementById('todayLabel').textContent=selected+'. Gün';document.getElementById('metricTasks').textContent=count+' / 7';document.getElementById('todayPercent').textContent=Math.round(count/7*100)+'%';document.getElementById('todayProgress').style.width=(count/7*100)+'%';
 }
 function renderWater(){let ml=Math.max(0,Number(day(selected).waterMl)||0),goal=2300,pct=Math.min(100,Math.round(ml/goal*100));document.getElementById('waterAmount').textContent=ml.toLocaleString('tr-TR')+' / 2.300 ml';document.getElementById('waterPercent').textContent=pct+'%';document.getElementById('waterProgress').style.width=pct+'%'}
-function changeWater(delta){let current=Math.max(0,Number(day(selected).waterMl)||0),next=Math.max(0,current+delta);if(next===current)return;recordUndo('su miktarı değişikliği');if(!data.days[selected])data.days[selected]={};data.days[selected].waterMl=next;localStorage.setItem(KEY,JSON.stringify(data));renderWater()}
+function changeWater(delta){let current=Math.max(0,Number(day(selected).waterMl)||0),next=Math.max(0,current+delta);if(next===current)return;recordUndo('su miktarı değişikliği');if(!data.days[selected])data.days[selected]={};data.days[selected].waterMl=next;localStorage.setItem(KEY,JSON.stringify(data));renderWater();const wp=document.getElementById('waterProgress');wp.classList.remove('water-burst');void wp.offsetWidth;wp.classList.add('water-burst')}
 document.getElementById('water250').onclick=()=>changeWater(250);
 document.getElementById('water500').onclick=()=>changeWater(500);
 document.getElementById('waterMinus').onclick=()=>changeWater(-250);
 function renderMeasures(){let body=document.getElementById('measureRows');body.innerHTML='';if(!data.measurements.length){body.innerHTML='<tr><td colspan="3" class="muted">Henüz ölçüm yok.</td></tr>';return}data.measurements.slice().reverse().forEach(m=>{let tr=document.createElement('tr');[m.date,m.weight?m.weight+' kg':'—',m.waist?m.waist+' cm':'—'].forEach(v=>{let td=document.createElement('td');td.textContent=v;tr.append(td)});body.append(tr)})}
+function renderProgressChart(){
+ const el=document.getElementById('progressChart');if(!el)return;
+ const vals=Array.from({length:30},(_,i)=>Object.entries(day(i+1)).filter(([k,v])=>k!=='activity'&&v===true).length);
+ const points=vals.map((v,i)=>`${18+i* (664/29)},${170-(v/7)*145}`);
+ const line=points.join(' ');
+ el.innerHTML=`<svg viewBox="0 0 700 190" role="img"><defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#50e0ae"/><stop offset="100%" stop-color="#50e0ae" stop-opacity="0"/></linearGradient></defs>
+ <line class="chart-grid" x1="18" y1="25" x2="682" y2="25"/><line class="chart-grid" x1="18" y1="97" x2="682" y2="97"/><line class="chart-grid" x1="18" y1="170" x2="682" y2="170"/>
+ <polygon class="chart-area" points="18,170 ${line} 682,170"/><polyline class="chart-line" points="${line}"/>
+ ${points.map((p,i)=>i%5===0?`<circle class="chart-dot" cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="4"/>`:'' ).join('')}
+ <g fill="#8299b0" font-size="10"><text x="18" y="186">1. gün</text><text x="320" y="186">15. gün</text><text x="650" y="186">30. gün</text></g></svg>`;
+}
 function renderSummaryOnly(){let done=completedDays(),count=Object.entries(day(selected)).filter(([k,v])=>k!=='activity'&&v===true).length;document.getElementById('metricDays').textContent=done+' / 30';document.getElementById('sideProgress').textContent=done+' / 30 gün tamamlandı';document.getElementById('progressText').textContent=done+' / 30 gün';document.getElementById('percent').textContent=Math.round(done/30*100)+'%';document.getElementById('mainProgress').style.width=(done/30*100)+'%';document.getElementById('metricTasks').textContent=count+' / 7';renderCalendar();document.getElementById('todayPercent').textContent=Math.round(count/7*100)+'%';document.getElementById('todayProgress').style.width=(count/7*100)+'%'}
-function render(){let done=completedDays(),count=Object.entries(day(selected)).filter(([k,v])=>k!=='activity'&&v===true).length;document.getElementById('metricDays').textContent=done+' / 30';document.getElementById('sideProgress').textContent=done+' / 30 gün tamamlandı';document.getElementById('progressText').textContent=done+' / 30 gün';document.getElementById('percent').textContent=Math.round(done/30*100)+'%';document.getElementById('mainProgress').style.width=(done/30*100)+'%';document.getElementById('metricTasks').textContent=count+' / 7';renderCalendar();renderDaily();renderMeasures();let ak=0;Object.values(data.days).forEach(x=>ak+=(Number(x.activity?.kcal)||0));document.getElementById('dashboardKcal').textContent=(Number(day(selected).activity?.kcal)||0)+' kcal';}
+function render(){let done=completedDays(),count=Object.entries(day(selected)).filter(([k,v])=>k!=='activity'&&v===true).length;document.getElementById('metricDays').textContent=done+' / 30';document.getElementById('sideProgress').textContent=done+' / 30 gün tamamlandı';document.getElementById('progressText').textContent=done+' / 30 gün';document.getElementById('percent').textContent=Math.round(done/30*100)+'%';document.getElementById('mainProgress').style.width=(done/30*100)+'%';document.getElementById('metricTasks').textContent=count+' / 7';renderCalendar();renderDaily();renderMeasures();renderProgressChart();let ak=0;Object.values(data.days).forEach(x=>ak+=(Number(x.activity?.kcal)||0));document.getElementById('dashboardKcal').textContent=(Number(day(selected).activity?.kcal)||0)+' kcal';}
 document.getElementById('prev').onclick=()=>{selected=Math.max(1,selected-1);render()};
 document.getElementById('next').onclick=()=>{selected=Math.min(30,selected+1);render()};
 document.getElementById('saveMeasure').onclick=()=>{let w=document.getElementById('weight').value,wa=document.getElementById('waist').value;if(!w&&!wa){alert('Kilo veya bel ölçüsünden en az birini gir.');return}recordUndo('ölçüm ekleme');data.measurements.push({date:new Date().toLocaleDateString('tr-TR'),weight:w,waist:wa});document.getElementById('weight').value='';document.getElementById('waist').value='';persist()};
@@ -208,24 +284,118 @@ document.getElementById('export').onclick=()=>{let blob=new Blob([JSON.stringify
 document.getElementById('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!x.days||!Array.isArray(x.measurements))throw Error();recordUndo('yedek içe aktarma');data=x;persist();alert('Yedek içe aktarıldı.')}catch(err){alert('Yedek dosyası okunamadı.')}e.target.value=''};
 document.getElementById('undoBtn').onclick=undoLast;
 document.getElementById('reset').onclick=()=>{if(confirm('Tüm işaretlemeler ve ölçümler silinsin mi?')){recordUndo('tüm verileri sıfırlama');data={days:{},measurements:[]};selected=1;persist()}};
-
-// Ön yüz prototip girişi: gerçek hesap doğrulaması Supabase bağlantısı yapıldığında etkinleştirilecek.
-const loginScreen=document.getElementById('loginScreen');
-const appRoot=document.querySelector('.app');
-document.getElementById('loginForm').addEventListener('submit',function(e){
- e.preventDefault();
- const u=document.getElementById('loginUser').value.trim();
- const p=document.getElementById('loginPass').value;
- if(u.toLowerCase()==='admin' && p==='admin123'){
-   loginScreen.style.display='none';appRoot.classList.add('unlocked');
-   sessionStorage.setItem('mtfit_demo_session','1');
- }else{
-   document.getElementById('loginError').textContent='Giriş bilgileri doğrulanamadı.';
- }
-});
-if(sessionStorage.getItem('mtfit_demo_session')==='1'){
- loginScreen.style.display='none';appRoot.classList.add('unlocked');
+// --- Local account layer (single-file edition) ---
+const ACCOUNTS_KEY='MT_FIT_ACCOUNTS_V1';
+let currentUser=null;
+function getAccounts(){
+ let a={};
+ try{a=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'{}')}catch(e){}
+ if(!a.admin){a.admin={username:'admin',hash:'',active:true,role:'admin',createdAt:new Date().toISOString()};}
+ return a;
 }
-render();updateUndoUI();
+async function hashPassword(value){
+ const bytes=new TextEncoder().encode('MTFIT::'+value+'::local-v1');
+ const digest=await crypto.subtle.digest('SHA-256',bytes);
+ return Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+async function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a))}
+async function seedAdmin(){
+ const a=getAccounts();
+ if(!a.admin.hash){a.admin.hash=await hashPassword('admin123');await saveAccounts(a)}
+}
+function showLogin(message=''){
+ document.getElementById('loginScreen').style.display='grid';
+ document.getElementById('mainApp').style.display='none';
+ document.getElementById('loginError').textContent=message;
+}
+function loadUserData(username){
+ KEY=KEY_PREFIX+username.toLowerCase();
+ data=readData();selected=1;undoStack.length=0;
+}
+function enterApp(user){
+ currentUser=user;
+ document.getElementById('loginScreen').style.display='none';
+ document.getElementById('mainApp').style.display='grid';
+ document.getElementById('userAvatar').textContent=(user.username||'M').slice(0,1).toUpperCase();
+ document.getElementById('adminNav').style.display=user.role==='admin'?'flex':'none';
+ document.getElementById('changePassBtn').style.display=user.role==='admin'?'none':'inline-block';
+ document.getElementById('syncStatus').textContent='● Yerel kayıt';
+ document.getElementById('syncStatus').title='Bu tek dosyalı sürümde bulut senkronizasyonu bağlı değil.';
+ if(user.role==='admin'){go('admin');renderAdmin()}else{loadUserData(user.username);go('dashboard');render();updateUndoUI()}
+}
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const username=document.getElementById('loginUsername').value.trim().toLowerCase();
+ const password=document.getElementById('loginPassword').value;
+ const a=getAccounts(),u=a[username];
+ if(!u||!u.active){document.getElementById('loginError').textContent='Kullanıcı adı veya şifre hatalı ya da hesap pasif.';return}
+ const hash=await hashPassword(password);
+ if(hash!==u.hash){document.getElementById('loginError').textContent='Kullanıcı adı veya şifre hatalı.';return}
+ enterApp({username:u.username,role:u.role});
+ document.getElementById('loginPassword').value='';
+});
+document.getElementById('logoutBtn').onclick=()=>{currentUser=null;showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
+document.getElementById('changePassBtn').onclick=()=>{document.getElementById('passwordModal').style.display='grid';document.getElementById('modalPassError').textContent=''};
+document.getElementById('modalSavePass').onclick=async()=>{
+ const p=document.getElementById('modalNewPass').value,c=document.getElementById('modalConfirmPass').value;
+ if(p.length<6||p!==c){document.getElementById('modalPassError').textContent='Şifreler aynı olmalı ve en az 6 karakter içermeli.';return}
+ const a=getAccounts();a[currentUser.username].hash=await hashPassword(p);await saveAccounts(a);
+ document.getElementById('passwordModal').style.display='none';document.getElementById('modalNewPass').value='';document.getElementById('modalConfirmPass').value='';
+ alert('Şifren güncellendi.');
+};
+function renderAdmin(){
+ const a=getAccounts(),users=Object.values(a);
+ document.getElementById('adminTotal').textContent=users.length;
+ document.getElementById('adminActive').textContent=users.filter(x=>x.active).length;
+ document.getElementById('adminInactive').textContent=users.filter(x=>!x.active).length;
+ const host=document.getElementById('userList');host.innerHTML='';
+ users.sort((x,y)=>x.username==='admin'?-1:y.username==='admin'?1:x.username.localeCompare(y.username)).forEach(u=>{
+  const row=document.createElement('div');row.className='user-row';
+  const left=document.createElement('div');left.innerHTML='<b></b><div class="muted" style="font-size:11px"></div>';
+  left.querySelector('b').textContent=u.username;
+  left.querySelector('.muted').textContent=u.role==='admin'?'Yönetici hesabı':'Kullanıcı hesabı';
+  const right=document.createElement('div');right.className='profile-actions';
+  const pill=document.createElement('span');pill.className='user-pill'+(u.active?'':' off');pill.textContent=u.active?'Aktif':'Pasif';right.append(pill);
+  if(u.username!=='admin'){
+   const reset=document.createElement('button');reset.className='btn';reset.textContent='Şifre belirle';reset.onclick=()=>adminResetUser(u.username);right.append(reset);
+   const toggle=document.createElement('button');toggle.className='btn '+(u.active?'danger':'primary');toggle.textContent=u.active?'Pasife al':'Aktifleştir';toggle.onclick=()=>adminToggleUser(u.username);right.append(toggle);
+  }
+  row.append(left,right);host.append(row);
+ });
+}
+document.getElementById('addUserBtn').onclick=async()=>{
+ const name=document.getElementById('newUsername').value.trim().toLowerCase(),pass=document.getElementById('newPassword').value;
+ const msg=document.getElementById('adminMessage');
+ if(!/^[a-z0-9_.-]{3,24}$/.test(name)){msg.textContent='Kullanıcı adı 3–24 karakter olmalı; harf, rakam, nokta, tire ve alt çizgi kullanılabilir.';return}
+ if(name==='admin'||pass.length<6){msg.textContent='Bu kullanıcı adı kullanılamaz veya şifre 6 karakterden kısa.';return}
+ const a=getAccounts();if(a[name]){msg.textContent='Bu kullanıcı adı zaten mevcut.';return}
+ a[name]={username:name,hash:await hashPassword(pass),active:true,role:'user',createdAt:new Date().toISOString()};
+ await saveAccounts(a);document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
+ msg.textContent='Kullanıcı oluşturuldu: '+name;renderAdmin();
+};
+async function adminResetUser(name){
+ const pass=prompt(name+' için yeni şifreyi gir (en az 6 karakter):');
+ if(pass===null)return;if(pass.length<6){alert('Şifre en az 6 karakter olmalı.');return}
+ const a=getAccounts();a[name].hash=await hashPassword(pass);await saveAccounts(a);alert(name+' şifresi güncellendi.');
+}
+async function adminToggleUser(name){
+ const a=getAccounts();a[name].active=!a[name].active;await saveAccounts(a);renderAdmin();
+}
+document.getElementById('adminPassBtn').onclick=async()=>{
+ const p=document.getElementById('adminNewPass').value,c=document.getElementById('adminConfirmPass').value;
+ const m=document.getElementById('adminPassMessage');
+ if(p.length<6||p!==c){m.textContent='Şifreler aynı olmalı ve en az 6 karakter içermeli.';return}
+ const a=getAccounts();a.admin.hash=await hashPassword(p);await saveAccounts(a);
+ document.getElementById('adminNewPass').value='';document.getElementById('adminConfirmPass').value='';
+ m.textContent='Yönetici şifresi değiştirildi.';
+};
+// Admin navigation uses its own page and never loads personal records.
+const originalGo=go;
+go=function(id){
+ if(id==='admin'&&currentUser?.role!=='admin')return;
+ originalGo(id);
+ if(id==='admin')renderAdmin();
+};
+seedAdmin().then(()=>showLogin());
 </script>
 </body></html>
