@@ -151,16 +151,6 @@ body{background:radial-gradient(ellipse at 12% 0%,#102a35 0,transparent 36%),var
    <button class="btn primary" type="submit">Giriş yap&nbsp; →</button>
    <div class="login-error" id="loginError"></div>
   </form>
-  <div style="margin-top:14px;border-top:1px solid #26384f;padding-top:14px">
-   <button class="btn" type="button" id="showAdminSetup" style="width:100%">İlk yönetici hesabını oluştur</button>
-   <div id="adminSetup" style="display:none;margin-top:12px">
-    <div style="color:#91a4bd;font-size:12px;margin-bottom:8px">İlk yönetici kullanıcı adı <b style="color:#edf4ff">admin</b> olarak sabittir. Kendine en az 6 karakterli bir şifre belirle.</div>
-    <label for="setupAdminPass">Yeni yönetici şifresi</label><input id="setupAdminPass" type="password" autocomplete="new-password" minlength="6" placeholder="En az 6 karakter">
-    <label for="setupAdminConfirm" style="display:block;margin-top:8px">Şifreyi tekrar gir</label><input id="setupAdminConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="Şifreyi tekrar gir">
-    <button class="btn primary" type="button" id="createAdminAccount" style="width:100%;margin-top:12px">Yönetici hesabını kur</button>
-    <div id="adminSetupMessage" class="login-error"></div>
-   </div>
-  </div>
   <div class="login-foot">MT FIT · Sağlıklı yaşam, ölçülebilir ilerleme</div>
  </div>
 </div>
@@ -831,40 +821,6 @@ document.getElementById('adminPassBtn').onclick=async()=>{
  if(fbAuth.currentUser)await fbAuth.currentUser.updatePassword(p);const a=getAccounts();a.admin.hash=await hashPassword(p);await saveAccounts(a);document.getElementById('adminNewPass').value='';document.getElementById('adminConfirmPass').value='';m.textContent='Yönetici şifresi Firebase ve bu cihazda güncellendi.';
 };
 const originalGo=go;go=function(id){if(id==='admin'&&currentUser?.role!=='admin')return;originalGo(id);if(id==='admin')renderAdmin()};
-document.getElementById('showAdminSetup').onclick=()=>{
- const box=document.getElementById('adminSetup');box.style.display=box.style.display==='none'?'block':'none';
-};
-document.getElementById('createAdminAccount').onclick=async()=>{
- const msg=document.getElementById('adminSetupMessage');
- const pass=document.getElementById('setupAdminPass').value,confirmPass=document.getElementById('setupAdminConfirm').value;
- if(pass.length<6||pass!==confirmPass){msg.textContent='Şifreler aynı olmalı ve en az 6 karakter olmalı.';return;}
- const btn=document.getElementById('createAdminAccount');btn.disabled=true;msg.textContent='Yönetici hesabı oluşturuluyor…';
- try{
-  const cred=await fbAuth.createUserWithEmailAndPassword(usernameEmail('admin'),pass);
-  const uid=cred.user.uid;
-  await fbDb.ref('users/'+uid+'/profile').set({username:'admin',role:'admin',createdAt:firebase.database.ServerValue.TIMESTAMP});
-  // Keep existing local admin data; if absent, do not overwrite it with an empty object.
-  KEY=KEY_PREFIX+'admin';
-  let adminData=readData();
-  const hasAdminData=adminData&&((adminData.days&&Object.keys(adminData.days).length)||(Array.isArray(adminData.measurements)&&adminData.measurements.length));
-  if(!hasAdminData){
-   try{const guest=JSON.parse(localStorage.getItem(KEY_PREFIX+'guest')||'null');if(guest&&typeof guest==='object')adminData=guest;}catch(e){}
-  }
-  if(!adminData||typeof adminData!=='object')adminData={days:{},measurements:[],sleep:[],goals:{},trainingCalendar:{}};
-  data=adminData;data.sleep=data.sleep||[];data.goals=data.goals||{};data.trainingCalendar=data.trainingCalendar||{};
-  await fbDb.ref('users/'+uid+'/data').set(data);
-  const accounts=getAccounts();accounts.admin={username:'admin',hash:await hashPassword(pass),active:true,role:'admin',createdAt:new Date().toISOString()};await saveAccounts(accounts);
-  startCloudDataListener(uid);enterApp({username:'admin',role:'admin'});
-  document.getElementById('setupAdminPass').value='';document.getElementById('setupAdminConfirm').value='';
-  msg.textContent='';
- }catch(err){
-  console.error('MT FIT admin setup:',err);
-  if(err.code==='auth/email-already-in-use')msg.textContent='admin hesabı Firebase’de zaten mevcut. Bu ekrandan ikinci kez oluşturulamaz. Firebase Authentication > Users bölümünden mevcut admin hesabını kontrol et.';
-  else if(err.code==='auth/operation-not-allowed')msg.textContent='Email/Password girişi Firebase Authentication içinde etkin değil.';
-  else if(err.code==='PERMISSION_DENIED'||String(err.message||'').toLowerCase().includes('permission'))msg.textContent='Firebase Rules erişimi engelliyor. users/$uid için giriş yapan kullanıcının kendi UID erişimi açık olmalı.';
-  else msg.textContent='Kurulum başarısız: '+(err.message||'Bilinmeyen hata');
- }finally{btn.disabled=false;}
-};
 seedAdmin().then(()=>showLogin()).catch(()=>showLogin('Yerel hesap başlatılamadı.'));
 </script>
 </body></html>
