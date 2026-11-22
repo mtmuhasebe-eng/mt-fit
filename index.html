@@ -638,7 +638,7 @@ const firebaseConfig={
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 const fbDb=firebase.database();
-let currentUser=null,cloudSaveTimer=null,cloudReady=false;
+let currentUser=null,cloudSaveTimer=null,cloudReady=false,cloudDataRef=null,cloudDataHandler=null,adminAccountsRef=null;
 function getAccounts(){
  let a={};try{a=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'{}')}catch(e){}
  if(!a.admin)a.admin={username:'admin',hash:'',active:true,role:'admin',createdAt:new Date().toISOString()};
@@ -650,7 +650,7 @@ async function hashPassword(value){
  return Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
 }
 async function saveAccounts(a){localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(a))}
-async function seedAdmin(){const a=getAccounts();if(!a.admin.hash){a.admin.hash=await hashPassword('admin123');await saveAccounts(a)}}
+async function seedAdmin(){const a=getAccounts();if(!a.admin.hash){a.admin.hash='';await saveAccounts(a)}}
 function showLogin(message=''){
  document.getElementById('loginScreen').style.display='grid';document.getElementById('mainApp').style.display='none';
  document.getElementById('loginError').textContent=message;
@@ -663,15 +663,53 @@ function setSyncStatus(message,isError=false){
  el.textContent=(isError?'● ':'● ')+message;el.style.color=isError?'#ff7185':'#39d39a';
  el.title=isError?'Senkronizasyon hatası':'Veriler Firebase hesabına kaydedilir.';
 }
+function stopCloudListeners(){
+ if(cloudDataRef&&cloudDataHandler)cloudDataRef.off('value',cloudDataHandler);
+ cloudDataRef=null;cloudDataHandler=null;
+ if(adminAccountsRef)adminAccountsRef.off();adminAccountsRef=null;
+}
+function startCloudDataListener(uid){
+ stopCloudListeners();
+ cloudDataRef=fbDb.ref('users/'+uid+'/data');
+ cloudDataHandler=snap=>{
+  const remote=snap.val();
+  if(remote&&typeof remote==='object'&&JSON.stringify(remote)!==JSON.stringify(data)){
+   data=remote;data.sleep=data.sleep||[];data.goals=data.goals||{};data.trainingCalendar=data.trainingCalendar||{};
+   localStorage.setItem(KEY,JSON.stringify(data));
+   if(currentUser&&currentUser.role!=='admin'){render();updateUndoUI();}
+   setSyncStatus('Diğer cihazdan güncellendi');
+  }
+ };
+ cloudDataRef.on('value',cloudDataHandler,err=>setSyncStatus('Senkronizasyon hatası: '+err.message,true));
+}
 function cloudSave(){
- if(!cloudReady||!fbAuth.currentUser||!currentUser||currentUser.role==='admin')return;
- clearTimeout(cloudSaveTimer);
- setSyncStatus('Senkronize ediliyor…');
+ if(!cloudReady||!fbAuth.currentUser||!currentUser)return;
+ clearTimeout(cloudSaveTimer);setSyncStatus('Senkronize ediliyor…');
  cloudSaveTimer=setTimeout(async()=>{
   try{await fbDb.ref('users/'+fbAuth.currentUser.uid+'/data').set(data);await fbDb.ref('users/'+fbAuth.currentUser.uid+'/meta/updatedAt').set(firebase.database.ServerValue.TIMESTAMP);setSyncStatus('Bulut senkronu açık');}
   catch(err){setSyncStatus('Senkronizasyon hatası',true);console.error('MT FIT cloud save:',err);}
  },650);
 }
+async function syncAdminAccountsToCloud(){
+ if(!fbAuth.currentUser||currentUser?.role!=='admin')return;
+ const accounts=getAccounts(),safe={};
+ Object.values(accounts).forEach(a=>{safe[a.username]={username:a.username,role:a.role||'user',active:a.active!==false,createdAt:a.createdAt||null};});
+ const ref=fbDb.ref('users/'+fbAuth.currentUser.uid+'/adminAccounts');
+ await ref.set(safe);adminAccountsRef=ref;
+}
+async function loadAdminAccountsFromCloud(uid){
+ const ref=fbDb.ref('users/'+uid+'/adminAccounts');
+ const snap=await ref.once('value');const remote=snap.val();
+ if(remote&&typeof remote==='object'){
+  const local=getAccounts();
+  Object.entries(remote).forEach(([name,meta])=>{
+   if(!local[name])local[name]={username:name,hash:'',active:meta.active!==false,role:meta.role||'user',createdAt:meta.createdAt||new Date().toISOString()};
+   else{local[name].active=meta.active!==false;local[name].role=meta.role||local[name].role;}
+  });
+  await saveAccounts(local);
+ }
+}
+
 function usernameEmail(username){return username.toLowerCase()+'@mt-fit-293c6.firebaseapp.com'}
 async function authenticateFirebase(username,password,localAccount){
  const email=usernameEmail(username);
@@ -692,19 +730,17 @@ async function loadCloudProfileAndData(user,username,localAccount){
  const role=profile.role||localAccount?.role||'user';
  const accounts=getAccounts();
  if(!accounts[username])accounts[username]={username,hash:await hashPassword(passwordForLocalCache),active:true,role,createdAt:new Date().toISOString()};
- else accounts[username].role=role;
+ else{accounts[username].role=role;if(!accounts[username].hash)accounts[username].hash=await hashPassword(passwordForLocalCache);}
  await saveAccounts(accounts);
- if(role!=='admin'){
-  loadUserData(username);
-  const cloudSnap=await fbDb.ref('users/'+user.uid+'/data').once('value');
-  const cloudData=cloudSnap.val();
-  if(cloudData&&typeof cloudData==='object'){
-   data=cloudData;data.sleep=data.sleep||[];data.goals=data.goals||{};data.trainingCalendar=data.trainingCalendar||{};
-   localStorage.setItem(KEY,JSON.stringify(data));
-  }else{
-   // First sign-in: keep and upload the existing device data rather than replacing it.
-   await fbDb.ref('users/'+user.uid+'/data').set(data);
-  }
+ loadUserData(username);
+ const cloudSnap=await fbDb.ref('users/'+user.uid+'/data').once('value');
+ const cloudData=cloudSnap.val();
+ if(cloudData&&typeof cloudData==='object'){
+  data=cloudData;data.sleep=data.sleep||[];data.goals=data.goals||{};data.trainingCalendar=data.trainingCalendar||{};
+  localStorage.setItem(KEY,JSON.stringify(data));
+ }else{
+  // First sign-in: keep and upload this account's existing device data rather than replacing it.
+  await fbDb.ref('users/'+user.uid+'/data').set(data);
  }
  return {username,role};
 }
@@ -714,8 +750,8 @@ function enterApp(user){
  document.getElementById('userAvatar').textContent=(user.username||'M').slice(0,1).toUpperCase();
  document.getElementById('adminNav').style.display=user.role==='admin'?'flex':'none';
  document.getElementById('changePassBtn').style.display=user.role==='admin'?'none':'inline-block';
- cloudReady=user.role!=='admin';setSyncStatus(user.role==='admin'?'Yönetici hesabı':'Bulut senkronu açık');
- if(user.role==='admin'){go('admin');renderAdmin()}else{go('dashboard');render();updateUndoUI()}
+ cloudReady=true;setSyncStatus('Bulut senkronu açık');
+ if(user.role==='admin'){go('admin');renderAdmin();syncAdminAccountsToCloud().catch(e=>setSyncStatus('Hesap listesi senkronize edilemedi',true));}else{go('dashboard');render();updateUndoUI()}
 }
 async function verifyPassword(value,hash){return (await hashPassword(value))===hash}
 document.getElementById('loginForm').addEventListener('submit',async e=>{
@@ -725,10 +761,12 @@ document.getElementById('loginForm').addEventListener('submit',async e=>{
  errBox.textContent='Firebase bağlantısı kontrol ediliyor…';passwordForLocalCache=password;cloudReady=false;
  try{
   await seedAdmin();const accounts=getAccounts();const localAccount=accounts[username];
-  if(localAccount&&(!localAccount.active||!await verifyPassword(password,localAccount.hash))){errBox.textContent='Kullanıcı adı veya şifre hatalı.';return;}
-  if(!localAccount&&username==='admin'){errBox.textContent='Yönetici hesabı bu cihazda bulunamadı. Önce ilk kurulum yaptığın bilgisayardan yönetici hesabıyla giriş yap.';return;}
+  if(localAccount&&localAccount.active===false){errBox.textContent='Bu hesap pasif durumda. Yöneticiyle görüş.';return;}
+  if(localAccount?.hash&&!(await verifyPassword(password,localAccount.hash))){errBox.textContent='Kullanıcı adı veya şifre hatalı.';return;}
   const credential=await authenticateFirebase(username,password,localAccount);
   const profileUser=await loadCloudProfileAndData(credential.user,username,localAccount);
+  if(profileUser.role==='admin')await loadAdminAccountsFromCloud(credential.user.uid);
+  startCloudDataListener(credential.user.uid);
   if(document.getElementById('rememberUser')?.checked)localStorage.setItem('mtfit_remember_username',username);else localStorage.removeItem('mtfit_remember_username');
   enterApp(profileUser);document.getElementById('loginPassword').value='';passwordForLocalCache='';
  }catch(err){
@@ -741,7 +779,7 @@ document.getElementById('loginForm').addEventListener('submit',async e=>{
   errBox.textContent='Giriş yapılamadı: '+msg;
  }finally{passwordForLocalCache='';}
 });
-document.getElementById('logoutBtn').onclick=async()=>{cloudReady=false;currentUser=null;try{await fbAuth.signOut()}catch(e){}showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
+document.getElementById('logoutBtn').onclick=async()=>{cloudReady=false;currentUser=null;stopCloudListeners();try{await fbAuth.signOut()}catch(e){}showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
 document.getElementById('changePassBtn').onclick=()=>{document.getElementById('passwordModal').style.display='grid';document.getElementById('modalPassError').textContent=''};
 document.getElementById('modalSavePass').onclick=async()=>{
  const p=document.getElementById('modalNewPass').value,c=document.getElementById('modalConfirmPass').value;
@@ -756,7 +794,7 @@ function renderAdmin(){
  users.sort((x,y)=>x.username==='admin'?-1:y.username==='admin'?1:x.username.localeCompare(y.username)).forEach(u=>{
   const row=document.createElement('div');row.className='user-row';const left=document.createElement('div');left.innerHTML='<b></b><div class="muted" style="font-size:11px"></div>';left.querySelector('b').textContent=u.username;left.querySelector('.muted').textContent=u.role==='admin'?'Yönetici hesabı':'Kullanıcı hesabı';
   const right=document.createElement('div');right.className='profile-actions';const pill=document.createElement('span');pill.className='user-pill'+(u.active?'':' off');pill.textContent=u.active?'Aktif':'Pasif';right.append(pill);
-  if(u.username!=='admin'){const reset=document.createElement('button');reset.className='btn';reset.textContent='Şifre belirle';reset.onclick=()=>adminResetUser(u.username);right.append(reset);const toggle=document.createElement('button');toggle.className='btn '+(u.active?'danger':'primary');toggle.textContent=u.active?'Pasife al':'Aktifleştir';toggle.onclick=()=>adminToggleUser(u.username);right.append(toggle)}
+  if(u.username!=='admin'){const reset=document.createElement('button');reset.className='btn';reset.textContent='Şifre işlemi';reset.onclick=()=>adminResetUser(u.username);right.append(reset);const toggle=document.createElement('button');toggle.className='btn '+(u.active?'danger':'primary');toggle.textContent=u.active?'Pasife al':'Aktifleştir';toggle.onclick=()=>adminToggleUser(u.username);right.append(toggle)}
   row.append(left,right);host.append(row);
  });
 }
@@ -765,15 +803,22 @@ document.getElementById('addUserBtn').onclick=async()=>{
  if(!/^[a-z0-9_.-]{3,24}$/.test(name)){msg.textContent='Kullanıcı adı 3–24 karakter olmalı; harf, rakam, nokta, tire ve alt çizgi kullanılabilir.';return}
  if(name==='admin'||pass.length<6){msg.textContent='Bu kullanıcı adı kullanılamaz veya şifre 6 karakterden kısa.';return}
  const a=getAccounts();if(a[name]){msg.textContent='Bu kullanıcı adı zaten kayıtlı.';return}
- a[name]={username:name,hash:await hashPassword(pass),active:true,role:'user',createdAt:new Date().toISOString()};await saveAccounts(a);
- document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';msg.textContent='Kullanıcı oluşturuldu. İlk girişinde Firebase hesabı otomatik açılacak.';renderAdmin();
+ try{
+  const secondaryName='MTFIT_SECONDARY';let secondary=firebase.apps.find(x=>x.name===secondaryName);
+  if(!secondary)secondary=firebase.initializeApp(firebaseConfig,secondaryName);
+  await secondary.auth().createUserWithEmailAndPassword(usernameEmail(name),pass);
+  await secondary.auth().signOut();
+  a[name]={username:name,hash:await hashPassword(pass),active:true,role:'user',createdAt:new Date().toISOString()};await saveAccounts(a);
+  await syncAdminAccountsToCloud();
+  document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';msg.textContent='Kullanıcı oluşturuldu ve buluta kaydedildi. Diğer cihazdan aynı kullanıcı adı ve şifreyle giriş yapabilir.';renderAdmin();
+ }catch(err){msg.textContent='Kullanıcı oluşturulamadı: '+(err.code==='auth/email-already-in-use'?'Bu kullanıcı Firebase’de zaten var.':(err.message||'Tekrar dene.'));}
 };
-async function adminResetUser(name){const pass=prompt(name+' için yeni şifreyi gir (en az 6 karakter):');if(pass===null)return;if(pass.length<6){alert('Şifre en az 6 karakter olmalı.');return}const a=getAccounts();a[name].hash=await hashPassword(pass);await saveAccounts(a);alert('Yerel şifre güncellendi. Kullanıcı bir sonraki girişinde yeni şifresini Firebase hesabında da kullanmalı.');}
-async function adminToggleUser(name){const a=getAccounts();a[name].active=!a[name].active;await saveAccounts(a);renderAdmin();}
+async function adminResetUser(name){alert('Güvenlik nedeniyle başka bir kullanıcının Firebase şifresi yönetici panelinden değiştirilemez. Kullanıcı kendi hesabındaki Şifremi unuttum / şifre sıfırlama işlemini kullanmalıdır.');}
+async function adminToggleUser(name){const a=getAccounts();a[name].active=!a[name].active;await saveAccounts(a);try{await syncAdminAccountsToCloud()}catch(e){alert('Durum yerelde değişti ancak buluta aktarılamadı: '+e.message)}renderAdmin();}
 document.getElementById('adminPassBtn').onclick=async()=>{
  const p=document.getElementById('adminNewPass').value,c=document.getElementById('adminConfirmPass').value,m=document.getElementById('adminPassMessage');
  if(p.length<6||p!==c){m.textContent='Şifreler aynı olmalı ve en az 6 karakter içermeli.';return}
- const a=getAccounts();a.admin.hash=await hashPassword(p);await saveAccounts(a);document.getElementById('adminNewPass').value='';document.getElementById('adminConfirmPass').value='';m.textContent='Yönetici şifresi değiştirildi. Bu değişiklik Firebase şifresini otomatik değiştirmez.';
+ if(fbAuth.currentUser)await fbAuth.currentUser.updatePassword(p);const a=getAccounts();a.admin.hash=await hashPassword(p);await saveAccounts(a);document.getElementById('adminNewPass').value='';document.getElementById('adminConfirmPass').value='';m.textContent='Yönetici şifresi Firebase ve bu cihazda güncellendi.';
 };
 const originalGo=go;go=function(id){if(id==='admin'&&currentUser?.role!=='admin')return;originalGo(id);if(id==='admin')renderAdmin()};
 seedAdmin().then(()=>showLogin()).catch(()=>showLogin('Yerel hesap başlatılamadı.'));
