@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<title>MT Fit | Kişisel Sağlık Paneli</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MT FIT">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>MT FIT | Kişisel Sağlık Paneli</title>
 <style>
 :root{--bg:#0a101c;--side:#0d1726;--panel:#121e30;--panel2:#17263a;--line:#26384f;--txt:#edf4ff;--muted:#91a4bd;--green:#39d39a;--blue:#68aaff;--amber:#f3bd69;--red:#ff7185}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
@@ -13,17 +19,54 @@
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px}.metric{padding:16px}.metric .label{color:var(--muted);font-size:12px}.metric strong{font-size:26px;display:block;margin:7px 0 2px}.metric .hint{font-size:11px;color:var(--muted)}.up{color:var(--green)}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.85fr);gap:15px;margin-top:15px}.panel{padding:18px;min-width:0}.panelhead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}.panel h2{font-size:16px;margin:0}.muted{color:var(--muted)}.progress{height:9px;border-radius:10px;background:#263950;overflow:hidden}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2cbd8c,#83edc1);border-radius:10px;transition:width .2s}.progressrow{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin:10px 0 8px}.dayselect{background:#0d1828;border:1px solid var(--line);color:var(--txt);padding:8px;border-radius:9px}.tasklist{display:grid;grid-template-columns:1fr 1fr;gap:9px}.task{display:flex;gap:10px;align-items:flex-start;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;min-height:75px}.task.done{border-color:#286d56;background:#102b28}.task input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--green);flex-shrink:0}.task b{display:block;font-size:13px}.task small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.daycell{border:1px solid var(--line);background:#17263a;color:var(--muted);padding:8px 2px;text-align:center;border-radius:9px;font-size:11px}.daycell.done{background:#12362e;border-color:#2a765a;color:#a9f2d4}.daycell.sel{outline:2px solid var(--blue)}.schedule{width:100%;border-collapse:collapse;font-size:12px}.schedule td,.schedule th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left}.schedule th{color:var(--muted);font-weight:600}.formrow{display:flex;gap:10px;flex-wrap:wrap}.field{display:grid;gap:5px;flex:1;min-width:120px}.field label{color:var(--muted);font-size:11px}.field input{background:#0c1727;border:1px solid var(--line);color:var(--txt);padding:10px;border-radius:9px;width:100%}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse}td,th{padding:10px 7px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}th{color:var(--muted)}.view{display:none}.view.active{display:block}.notice{border:1px solid #65512e;background:#2a2418;color:#f2d49d;padding:12px;border-radius:11px;font-size:12px;margin-top:14px}.foot{font-size:11px;color:var(--muted);margin-top:18px}.dayplan{border:1px solid #2b4d63;background:linear-gradient(120deg,#132b3a,#142437);border-radius:13px;padding:15px;margin:12px 0 16px}.dayplan h3{margin:0 0 8px;font-size:15px}.planline{padding:8px 0;border-top:1px solid #294055}.planline b{display:block}.calbox{margin-top:14px;padding:13px;border:1px solid var(--line);border-radius:12px;background:#0f1b2b}.calgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.calbox input,.calbox select{width:100%;background:#0b1625;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px}.kcalnum{font-size:24px;font-weight:800;color:var(--green)}.undoarea{display:flex;align-items:center;gap:8px}.btn:disabled{opacity:.4;cursor:not-allowed}.undohelp{font-size:10px;color:var(--muted)}
 @media(max-width:950px){.app{grid-template-columns:75px 1fr}.sidebar{padding:18px 9px}.brand{justify-content:center;padding:0}.brand .brandtext,.navlabel,.nav button .navtext,.sidebottom{display:none}.nav button{justify-content:center;padding:12px 4px}.nav .ico{font-size:18px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.app{display:block}.sidebar{position:sticky;top:0;z-index:5;height:auto;padding:7px 9px;border-right:0;border-bottom:1px solid var(--line);display:block}.brand{display:none}.nav{display:flex;justify-content:space-around;gap:2px}.nav button{flex:1;display:grid;gap:1px;padding:7px 2px;font-size:10px}.nav button .navtext{display:block;font-size:9px}.nav .ico{font-size:15px;width:auto}.topbar{height:48px;padding:0 14px}.content{padding:19px 13px 35px}.pagehead{align-items:flex-start;flex-direction:column}.pagehead h1{font-size:24px}.cards{gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.tasklist{grid-template-columns:1fr}.panel{padding:14px}.status{font-size:10px}}
+
+/* MT FIT premium login + responsive app identity */
+.login-screen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,#173b3a 0%,#0a101c 55%,#070c14 100%)}
+.login-card{width:min(100%,420px);padding:34px;border:1px solid #2b4558;border-radius:24px;background:rgba(14,25,40,.94);box-shadow:0 28px 90px #0009;text-align:center}
+.login-brand{display:flex;justify-content:center;align-items:center;gap:13px;margin-bottom:25px}
+.mt-logo{width:62px;height:62px;border-radius:19px;background:linear-gradient(145deg,#72f0bd,#17a77e 70%,#08735c);display:grid;place-items:center;color:#05271d;font-size:25px;font-weight:1000;letter-spacing:-2px;box-shadow:0 10px 30px #21c48b40}
+.login-brand strong{display:block;font-size:23px;letter-spacing:.14em;text-align:left}
+.login-brand small{display:block;color:#91a4bd;font-size:10px;letter-spacing:.23em;text-align:left;margin-top:2px}
+.login-card h1{font-size:23px;margin:0 0 5px}.login-card .login-sub{color:#91a4bd;margin:0 0 24px;font-size:13px}
+.login-field{text-align:left;margin:13px 0}.login-field label{display:block;color:#b5c5d8;font-size:12px;margin-bottom:7px}
+.login-field input{width:100%;border:1px solid #2b4057;background:#0a1422;color:#edf4ff;border-radius:11px;padding:13px 14px;outline:none}
+.login-field input:focus{border-color:#39d39a;box-shadow:0 0 0 3px #39d39a20}
+.login-submit{width:100%;border:0;border-radius:11px;padding:13px;margin-top:12px;background:linear-gradient(90deg,#39d39a,#71e7b8);color:#05251b;font-weight:900}
+.login-error{min-height:20px;color:#ff8b9b;font-size:12px;margin-top:10px}
+.login-foot{color:#7288a2;font-size:10px;margin-top:18px}
+.app{display:none}.app.unlocked{display:grid}
+.nav button .ico{width:23px;height:23px;border-radius:8px;background:#1b3044;display:inline-grid;place-items:center;font-size:14px;flex-shrink:0}
+.nav button.active .ico{background:#245944;color:#a8f3d2}
+@media(max-width:760px){.login-card{padding:27px 22px}.app{grid-template-columns:1fr!important}.sidebar{padding:12px!important;gap:10px!important;border-right:0!important;border-bottom:1px solid var(--line)}.sidebar .nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.sidebar .nav button{padding:8px 4px;justify-content:center;flex-direction:column;gap:3px;font-size:10px;text-align:center}.sidebar .nav .ico{width:25px;height:25px}.sidebar .navlabel,.sidebottom{display:none}.brand{padding:2px 5px}.topbar{height:55px;padding:0 14px}.content{padding:18px 13px 35px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.pagehead h1{font-size:24px}.tasklist{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="mt-logo">MT</div>
+      <div><strong>MT FIT</strong><small>PERSONAL WELLNESS</small></div>
+    </div>
+    <h1>Tekrar hoş geldin</h1>
+    <p class="login-sub">Kişisel gelişim paneline giriş yap</p>
+    <form id="loginForm">
+      <div class="login-field"><label for="loginUser">Kullanıcı adı</label><input id="loginUser" autocomplete="username" placeholder="Kullanıcı adın" required></div>
+      <div class="login-field"><label for="loginPass">Şifre</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Şifren" required></div>
+      <button class="login-submit" type="submit">GİRİŞ YAP&nbsp; →</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+    <div class="login-foot">MT FIT · KENDİNİN EN İYİ HALİNE DOĞRU</div>
+  </div>
+</div>
+
 <div class="app">
 <aside class="sidebar">
  <div class="brand"><div class="logo">MT</div><div class="brandtext"><b>MT FIT</b><small>PERSONAL TRACKER</small></div></div>
  <div><div class="navlabel">ÇALIŞMA ALANI</div><nav class="nav">
-  <button class="active" data-view="dashboard"><span class="ico">▦</span><span class="navtext">Genel Bakış</span></button>
+  <button class="active" data-view="dashboard"><span class="ico">⌂</span><span class="navtext">Genel Bakış</span></button>
   <button data-view="daily"><span class="ico">✓</span><span class="navtext">Günlük Takip</span></button>
-  <button data-view="measure"><span class="ico">⌁</span><span class="navtext">Ölçümlerim</span></button>
-  <button data-view="plan"><span class="ico">▤</span><span class="navtext">Programım</span></button>
+  <button data-view="measure"><span class="ico">⚖</span><span class="navtext">Ölçümlerim</span></button>
+  <button data-view="plan"><span class="ico">▣</span><span class="navtext">Programım</span></button>
  </nav></div>
  <div class="sidebottom">30 GÜNLÜK HEDEF<br><b style="color:#eaf5ff">Düzenli hareket · Dengeli beslenme</b><br><span id="sideProgress">0 / 30 gün tamamlandı</span></div>
 </aside>
@@ -165,6 +208,24 @@ document.getElementById('export').onclick=()=>{let blob=new Blob([JSON.stringify
 document.getElementById('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!x.days||!Array.isArray(x.measurements))throw Error();recordUndo('yedek içe aktarma');data=x;persist();alert('Yedek içe aktarıldı.')}catch(err){alert('Yedek dosyası okunamadı.')}e.target.value=''};
 document.getElementById('undoBtn').onclick=undoLast;
 document.getElementById('reset').onclick=()=>{if(confirm('Tüm işaretlemeler ve ölçümler silinsin mi?')){recordUndo('tüm verileri sıfırlama');data={days:{},measurements:[]};selected=1;persist()}};
+
+// Ön yüz prototip girişi: gerçek hesap doğrulaması Supabase bağlantısı yapıldığında etkinleştirilecek.
+const loginScreen=document.getElementById('loginScreen');
+const appRoot=document.querySelector('.app');
+document.getElementById('loginForm').addEventListener('submit',function(e){
+ e.preventDefault();
+ const u=document.getElementById('loginUser').value.trim();
+ const p=document.getElementById('loginPass').value;
+ if(u.toLowerCase()==='admin' && p==='admin123'){
+   loginScreen.style.display='none';appRoot.classList.add('unlocked');
+   sessionStorage.setItem('mtfit_demo_session','1');
+ }else{
+   document.getElementById('loginError').textContent='Giriş bilgileri doğrulanamadı.';
+ }
+});
+if(sessionStorage.getItem('mtfit_demo_session')==='1'){
+ loginScreen.style.display='none';appRoot.classList.add('unlocked');
+}
 render();updateUndoUI();
 </script>
 </body></html>
