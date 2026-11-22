@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>MT Fit | Kişisel Sağlık Paneli</title>
+<style>
+:root{--bg:#0a101c;--side:#0d1726;--panel:#121e30;--panel2:#17263a;--line:#26384f;--txt:#edf4ff;--muted:#91a4bd;--green:#39d39a;--blue:#68aaff;--amber:#f3bd69;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.sidebar{background:var(--side);border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:24px}.brand{display:flex;align-items:center;gap:11px;padding:3px 8px}.logo{width:39px;height:39px;border-radius:12px;background:linear-gradient(145deg,#42d6a0,#178a70);display:grid;place-items:center;color:#06251b;font-weight:900;font-size:18px}.brand b{font-size:16px;letter-spacing:.08em}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.17em}.navlabel{font-size:10px;color:#71859f;letter-spacing:.16em;font-weight:800;padding:0 10px;margin-bottom:5px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:var(--muted);text-align:left;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:12px}.nav button.active,.nav button:hover{background:#1a2c42;color:#eafff7}.nav .ico{width:20px;text-align:center;font-size:16px}.sidebottom{margin-top:auto;border:1px solid var(--line);background:#111e30;border-radius:13px;padding:13px;color:var(--muted);font-size:12px}
+.main{min-width:0}.topbar{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#0d1725}.topbar .crumb{color:var(--muted)}.topright{display:flex;gap:10px;align-items:center}.status{border:1px solid #285b4d;background:#102d28;color:#8de8c5;padding:6px 10px;border-radius:20px;font-size:11px}.avatar{width:34px;height:34px;background:#253b55;border-radius:50%;display:grid;place-items:center;font-weight:800}
+.content{max-width:1400px;margin:auto;padding:28px 30px 50px}.pagehead{display:flex;justify-content:space-between;gap:15px;align-items:flex-end;margin-bottom:22px}.eyebrow{font-size:10px;letter-spacing:.18em;color:var(--green);font-weight:800}.pagehead h1{font-size:29px;margin:5px 0 3px;letter-spacing:-.03em}.sub{color:var(--muted);margin:0}.btn{border:1px solid var(--line);background:#1a2a40;color:var(--txt);padding:9px 13px;border-radius:9px}.btn.primary{background:var(--green);color:#06251b;border-color:var(--green);font-weight:800}.btn.danger{background:#3b202b;border-color:#693342;color:#ffc3cc}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px}.metric{padding:16px}.metric .label{color:var(--muted);font-size:12px}.metric strong{font-size:26px;display:block;margin:7px 0 2px}.metric .hint{font-size:11px;color:var(--muted)}.up{color:var(--green)}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.85fr);gap:15px;margin-top:15px}.panel{padding:18px;min-width:0}.panelhead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}.panel h2{font-size:16px;margin:0}.muted{color:var(--muted)}.progress{height:9px;border-radius:10px;background:#263950;overflow:hidden}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2cbd8c,#83edc1);border-radius:10px;transition:width .2s}.progressrow{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin:10px 0 8px}.dayselect{background:#0d1828;border:1px solid var(--line);color:var(--txt);padding:8px;border-radius:9px}.tasklist{display:grid;grid-template-columns:1fr 1fr;gap:9px}.task{display:flex;gap:10px;align-items:flex-start;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;min-height:75px}.task.done{border-color:#286d56;background:#102b28}.task input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--green);flex-shrink:0}.task b{display:block;font-size:13px}.task small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.daycell{border:1px solid var(--line);background:#17263a;color:var(--muted);padding:8px 2px;text-align:center;border-radius:9px;font-size:11px}.daycell.done{background:#12362e;border-color:#2a765a;color:#a9f2d4}.daycell.sel{outline:2px solid var(--blue)}.schedule{width:100%;border-collapse:collapse;font-size:12px}.schedule td,.schedule th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left}.schedule th{color:var(--muted);font-weight:600}.formrow{display:flex;gap:10px;flex-wrap:wrap}.field{display:grid;gap:5px;flex:1;min-width:120px}.field label{color:var(--muted);font-size:11px}.field input{background:#0c1727;border:1px solid var(--line);color:var(--txt);padding:10px;border-radius:9px;width:100%}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse}td,th{padding:10px 7px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}th{color:var(--muted)}.view{display:none}.view.active{display:block}.notice{border:1px solid #65512e;background:#2a2418;color:#f2d49d;padding:12px;border-radius:11px;font-size:12px;margin-top:14px}.foot{font-size:11px;color:var(--muted);margin-top:18px}.dayplan{border:1px solid #2b4d63;background:linear-gradient(120deg,#132b3a,#142437);border-radius:13px;padding:15px;margin:12px 0 16px}.dayplan h3{margin:0 0 8px;font-size:15px}.planline{padding:8px 0;border-top:1px solid #294055}.planline b{display:block}.calbox{margin-top:14px;padding:13px;border:1px solid var(--line);border-radius:12px;background:#0f1b2b}.calgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.calbox input,.calbox select{width:100%;background:#0b1625;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px}.kcalnum{font-size:24px;font-weight:800;color:var(--green)}.undoarea{display:flex;align-items:center;gap:8px}.btn:disabled{opacity:.4;cursor:not-allowed}.undohelp{font-size:10px;color:var(--muted)}
+@media(max-width:950px){.app{grid-template-columns:75px 1fr}.sidebar{padding:18px 9px}.brand{justify-content:center;padding:0}.brand .brandtext,.navlabel,.nav button .navtext,.sidebottom{display:none}.nav button{justify-content:center;padding:12px 4px}.nav .ico{font-size:18px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.app{display:block}.sidebar{position:sticky;top:0;z-index:5;height:auto;padding:7px 9px;border-right:0;border-bottom:1px solid var(--line);display:block}.brand{display:none}.nav{display:flex;justify-content:space-around;gap:2px}.nav button{flex:1;display:grid;gap:1px;padding:7px 2px;font-size:10px}.nav button .navtext{display:block;font-size:9px}.nav .ico{font-size:15px;width:auto}.topbar{height:48px;padding:0 14px}.content{padding:19px 13px 35px}.pagehead{align-items:flex-start;flex-direction:column}.pagehead h1{font-size:24px}.cards{gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.tasklist{grid-template-columns:1fr}.panel{padding:14px}.status{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand"><div class="logo">MT</div><div class="brandtext"><b>MT FIT</b><small>PERSONAL TRACKER</small></div></div>
+ <div><div class="navlabel">ÇALIŞMA ALANI</div><nav class="nav">
+  <button class="active" data-view="dashboard"><span class="ico">▦</span><span class="navtext">Genel Bakış</span></button>
+  <button data-view="daily"><span class="ico">✓</span><span class="navtext">Günlük Takip</span></button>
+  <button data-view="measure"><span class="ico">⌁</span><span class="navtext">Ölçümlerim</span></button>
+  <button data-view="plan"><span class="ico">▤</span><span class="navtext">Programım</span></button>
+ </nav></div>
+ <div class="sidebottom">30 GÜNLÜK HEDEF<br><b style="color:#eaf5ff">Düzenli hareket · Dengeli beslenme</b><br><span id="sideProgress">0 / 30 gün tamamlandı</span></div>
+</aside>
+<main class="main">
+ <div class="topbar"><div class="crumb">MT FIT <span style="color:#52677f">/</span> <b id="crumb">Genel Bakış</b></div><div class="topright"><div class="undoarea"><button class="btn" id="undoBtn" disabled title="Son işlemi geri al">↶ Geri al</button><span class="undohelp" id="undoLabel">Henüz işlem yok</span></div><span class="status">● Cihazda kayıt açık</span><div class="avatar">M</div></div></div>
+ <div class="content">
+  <section class="view active" id="dashboard">
+   <div class="pagehead"><div><div class="eyebrow">KİŞİSEL SAĞLIK PANELİ</div><h1>Hoş geldin 👋</h1><p class="sub">Bugün küçük bir adım, 30 gün sonunda güçlü bir alışkanlık.</p></div><button class="btn primary" onclick="go('daily')">Bugünkü görevler →</button></div>
+   <div class="cards">
+    <div class="metric"><div class="label">Başlangıç kilosu</div><strong>75 <span style="font-size:14px">kg</span></strong><div class="hint">Başlangıç referansın</div></div>
+    <div class="metric"><div class="label">İlk hedef aralığı</div><strong>68–70 <span style="font-size:14px">kg</span></strong><div class="hint">Uzun vadeli, kademeli hedef</div></div>
+    <div class="metric"><div class="label">Tamamlanan gün</div><strong id="metricDays">0 / 30</strong><div class="hint">Günlük 5/7 görev eşiği</div></div>
+    <div class="metric"><div class="label">Bugünkü görevler</div><strong id="metricTasks">0 / 7</strong><div class="hint">İşaretledikçe güncellenir</div></div>
+   </div>
+   <div class="layout">
+    <div class="panel">
+     <div class="panelhead"><h2>30 günlük ilerleme</h2><span class="muted" id="percent">0%</span></div>
+     <div class="progress"><span id="mainProgress"></span></div>
+     <div class="progressrow"><span class="muted">Başlangıç</span><b id="progressText">0 / 30 gün</b><span class="muted">Hedef</span></div>
+     <div class="panelhead" style="margin-top:22px"><h2>Gün takvimi</h2><span class="muted">Bir güne dokun</span></div>
+     <div class="weekgrid" id="calendar"></div>
+    </div>
+    <div class="panel">
+     <div class="panelhead"><h2>Bugünün özeti</h2><span class="muted" id="todayLabel">1. Gün</span></div>
+     <p class="muted" style="font-size:12px">Günlük hedeflerini tamamladıkça ilerlemen burada görünür.</p>
+     <div class="progressrow"><b>Görev tamamlanma</b><b id="todayPercent">0%</b></div><div class="progress"><span id="todayProgress"></span></div>
+     <div class="planline" style="margin-top:12px"><span class="muted">Bugün tahmini yakılan</span><b class="kcalnum" id="dashboardKcal">0 kcal</b></div>
+     <div style="display:flex;gap:9px;margin-top:17px"><button class="btn primary" onclick="go('daily')">Görevleri işaretle</button><button class="btn" onclick="go('measure')">Ölçüm ekle</button></div>
+     <div class="notice">Not: Karın bölgesinden tek başına yağ yakılamaz. Genel yağ kaybı, yürüyüş ve kuvvet egzersizi birlikte ilerler.</div>
+    </div>
+   </div>
+  </section>
+  <section class="view" id="daily">
+   <div class="pagehead"><div><div class="eyebrow">GÜNLÜK RUTİN</div><h1>Günlük Takip</h1><p class="sub">Yaptığın görevleri işaretle; ilerlemen otomatik kaydedilir.</p></div></div>
+   <div class="panel">
+    <div class="panelhead"><h2>Gün seçimi</h2><div style="display:flex;gap:7px"><button class="btn" id="prev">←</button><select class="dayselect" id="daySelect"></select><button class="btn" id="next">→</button></div></div>
+    <p class="muted" id="daySubtitle">1. gün · Alışma dönemi</p>
+    <div class="dayplan" id="dayPlan"></div>
+    <div class="calbox">
+     <div class="panelhead"><h2>Aktivite ve kalori hesabı</h2><span class="muted" style="font-size:11px">75 kg üzerinden tahmin</span></div>
+     <div class="calgrid">
+      <div class="field"><label for="walkMinutes">Yürüyüş süresi (dakika)</label><input id="walkMinutes" type="number" min="0" max="300" placeholder="Örn. 25"></div>
+      <div class="field"><label for="walkPace">Yürüyüş temposu</label><select id="walkPace"><option value="3.5">Rahat</option><option value="4.3" selected>Orta / tempolu</option><option value="5">Hızlı</option></select></div>
+      <div class="field"><label for="strengthMinutes">Kuvvet egzersizi (dakika)</label><input id="strengthMinutes" type="number" min="0" max="180" placeholder="Örn. 15"></div>
+      <div class="field"><label>Tahmini yakılan kalori</label><div class="kcalnum" id="dayKcal">0 kcal</div></div>
+     </div>
+     <p class="muted" style="font-size:11px;margin:9px 0 0">Süreleri girince yaklaşık değer hesaplanır ve o güne kaydedilir. Gerçek yakım; tempo, kondisyon ve egzersiz tekniğine göre değişebilir.</p>
+    </div>
+    <div class="calbox" style="margin-top:14px">
+     <div class="panelhead"><h2>💧 Günlük su takibi</h2><span class="muted" style="font-size:11px">Başlangıç hedefi: 2,3 litre</span></div>
+     <div class="progressrow"><b id="waterAmount">0 / 2.300 ml</b><b id="waterPercent">0%</b></div>
+     <div class="progress"><span id="waterProgress"></span></div>
+     <div class="formrow" style="margin-top:13px;align-items:center">
+      <button class="btn primary" type="button" id="water250">+250 ml</button>
+      <button class="btn primary" type="button" id="water500">+500 ml</button>
+      <button class="btn" type="button" id="waterMinus">−250 ml</button>
+     </div>
+     <p class="muted" style="font-size:11px;margin:9px 0 0">Her su içtiğinde miktarı ekle. Hedef yaklaşık bir başlangıç değeridir; sıcaklık, terleme, egzersiz ve sağlık durumuna göre ihtiyaç değişebilir. Suyu gün içine yay.</p>
+    </div>
+    <div class="panelhead" style="margin-top:18px"><h2>Günlük alışkanlık kontrolü</h2></div>
+    <div class="tasklist" id="tasks"></div>
+    <p class="muted" style="font-size:11px;margin-top:13px">Bir günü tamamlanmış saymak için 7 görevden en az 5'ini işaretle. Kaçırdığın gün olursa kaldığın yerden devam et.</p>
+   </div>
+  </section>
+  <section class="view" id="measure">
+   <div class="pagehead"><div><div class="eyebrow">GELİŞİM KAYDI</div><h1>Ölçümlerim</h1><p class="sub">Tartı kadar bel çevresindeki değişimi de takip et.</p></div></div>
+   <div class="panel">
+    <h2 style="margin-bottom:7px">Yeni ölçüm ekle</h2><p class="muted" style="font-size:12px">Haftada bir, sabah benzer koşullarda ölçüm yap. Belini göbek deliği hizasından, mezurayı sıkmadan ölç.</p>
+    <div class="formrow" style="margin-top:15px"><div class="field"><label for="weight">Kilo (kg)</label><input id="weight" type="number" min="30" max="250" step=".1" placeholder="75"></div><div class="field"><label for="waist">Bel çevresi (cm)</label><input id="waist" type="number" min="40" max="200" step=".1" placeholder="Örn. 96"></div><div style="align-self:end"><button class="btn primary" id="saveMeasure">Ölçümü kaydet</button></div></div>
+    <div class="tablewrap" style="margin-top:20px"><table><thead><tr><th>Tarih</th><th>Kilo</th><th>Bel çevresi</th></tr></thead><tbody id="measureRows"><tr><td colspan="3" class="muted">Henüz ölçüm yok.</td></tr></tbody></table></div>
+   </div>
+  </section>
+  <section class="view" id="plan">
+   <div class="pagehead"><div><div class="eyebrow">30 GÜNLÜK YOL HARİTASI</div><h1>Programım</h1><p class="sub">Hareket seviyeni kademeli artır; zorlayarak değil, devam ederek ilerle.</p></div></div>
+   <div class="panel">
+    <h2>Haftalık yürüyüş ve kuvvet planı</h2><div class="tablewrap"><table class="schedule"><thead><tr><th>Dönem</th><th>Yürüyüş hedefi</th><th>Kuvvet egzersizi</th><th>Odak</th></tr></thead><tbody><tr><td>1. hafta</td><td>20 dk/gün</td><td>Haftada 3 gün</td><td>Alışma</td></tr><tr><td>2. hafta</td><td>30 dk/gün</td><td>Haftada 3 gün</td><td>Düzen</td></tr><tr><td>3. hafta</td><td>40 dk/gün</td><td>Haftada 3 gün</td><td>Temponu artır</td></tr><tr><td>4. hafta</td><td>45 dk/gün</td><td>Haftada 3 gün</td><td>Devamlılık</td></tr></tbody></table></div>
+    <h2 style="margin-top:22px">Kuvvet egzersizleri</h2><div class="tasklist">
+     <div class="task"><span><b>Squat</b><small>3 set × 12 tekrar</small></span></div>
+     <div class="task"><span><b>Plank</b><small>3 set × 15–20 saniye</small></span></div>
+     <div class="task"><span><b>Kalça köprüsü</b><small>3 set × 15 tekrar</small></span></div>
+     <div class="task"><span><b>Bird-dog</b><small>2 set × 10 tekrar</small></span></div>
+    </div>
+    <div class="notice">İlk hafta hafif başla. Ağrı, baş dönmesi veya olağandışı nefes darlığında egzersizi bırak. Göbeğin sert, ağrılı veya yeni gelişen biçimde şişse sağlık uzmanına danış.</div>
+   </div>
+  </section>
+  <div class="panel" style="margin-top:15px">
+   <div class="panelhead"><div><h2>Veri yedekleme</h2><div class="muted" style="font-size:11px;margin-top:3px">Verilerin bu tarayıcıda saklanır.</div></div></div>
+   <div class="formrow"><button class="btn" id="export">Yedeği indir</button><label class="btn" style="display:inline-flex;align-items:center">Yedek içe aktar<input id="importFile" type="file" accept=".json,application/json" style="display:none"></label><button class="btn danger" id="reset">Verileri sıfırla</button></div>
+   <div class="foot">Bu sürümde telefon ve bilgisayar arasında otomatik bulut senkronizasyonu bulunmuyor. Cihazlar arasında veri taşımak için yedek indirip diğer cihazda içe aktarabilirsin. Otomatik senkronizasyon için ayrıca güvenli bir bulut veritabanı bağlantısı kurulması gerekir.</div>
+  </div>
+  <div class="foot">MT FIT · Kişisel takip paneli · Sağlıklı ve sürdürülebilir ilerleme</div>
+ </div>
+</main>
+</div>
+<script>
+const KEY='belTakip30_v1';
+const taskData=[['Yürüyüş','Bu haftanın günlük yürüyüş süresini tamamla'],['Proteinli öğünler','Ana öğünlerde yumurta, yoğurt, et, tavuk, balık veya baklagil'],['Sebze / salata','En az iki öğünde sebze veya salata'],['Porsiyon kontrolü','Aşırı yemeden, aç kalmadan dengeli beslen'],['Su','Gün içine yayarak yeterli su iç'],['Kuvvet egzersizi','Planlı kuvvet günüyse egzersiz; değilse dinlenme'],['Uyku','7–9 saat uyumayı hedefle']];
+let data=readData(),selected=1;
+const undoStack=[];
+function recordUndo(label){undoStack.push({snapshot:JSON.stringify(data),label});if(undoStack.length>30)undoStack.shift();updateUndoUI()}
+function updateUndoUI(){const b=document.getElementById('undoBtn'),l=document.getElementById('undoLabel');if(!b||!l)return;b.disabled=!undoStack.length;l.textContent=undoStack.length?('Son işlem: '+undoStack[undoStack.length-1].label):'Henüz işlem yok'}
+function undoLast(){if(!undoStack.length)return;const item=undoStack.pop();data=JSON.parse(item.snapshot);localStorage.setItem(KEY,JSON.stringify(data));updateUndoUI();render();const l=document.getElementById('undoLabel');l.textContent='Geri alındı: '+item.label}
+function readData(){try{return JSON.parse(localStorage.getItem(KEY))||{days:{},measurements:[]}}catch(e){return{days:{},measurements:[]}}}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function day(n){return data.days[n]||{}}
+function completedDays(){let c=0;for(let i=1;i<=30;i++)if(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5)c++;return c}
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));let names={dashboard:'Genel Bakış',daily:'Günlük Takip',measure:'Ölçümlerim',plan:'Programım'};document.getElementById('crumb').textContent=names[id];window.scrollTo({top:0,behavior:'smooth'});if(id==='daily')renderDaily()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+function renderCalendar(){let el=document.getElementById('calendar');el.innerHTML='';for(let i=1;i<=30;i++){let x=document.createElement('button');x.className='daycell'+(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5?' done':'')+(i===selected?' sel':'');x.textContent=i+(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5?' ✓':'');x.onclick=()=>{selected=i;go('daily');render()};el.append(x)}}
+function renderDaily(){
+ let sel=document.getElementById('daySelect');
+ if(!sel.options.length){for(let i=1;i<=30;i++){let o=document.createElement('option');o.value=i;o.textContent=i+'. Gün';sel.append(o)}sel.onchange=()=>{selected=+sel.value;render()}}
+ sel.value=selected;let d=day(selected),week=Math.ceil(selected/7),walkTarget=week===1?20:week===2?30:week===3?40:45;
+ let strengthDay=[1,3,5].includes(((selected-1)%7)+1);
+ let plan=document.getElementById('dayPlan');
+ plan.innerHTML='<h3>📅 '+selected+'. günün programı</h3><div class="planline"><b>1. Yürüyüş · '+walkTarget+' dakika</b><span class="muted">Rahat başlayıp konuşabilecek ama hafif nefeslenecek tempoda yürü.</span></div>'+
+ (strengthDay?'<div class="planline"><b>2. Kuvvet çalışması · yaklaşık 12–18 dakika</b><span class="muted">Squat 3×12 · Plank 3×15–20 sn · Kalça köprüsü 3×15 · Bird-dog 2×10</span></div>':'<div class="planline"><b>2. Aktif dinlenme</b><span class="muted">Kuvvet antrenmanı yok. İstersen 5–10 dakika hafif esneme yap.</span></div>')+
+ '<div class="planline"><b>3. Beslenme ve toparlanma</b><span class="muted">Protein içeren dengeli öğünler, sebze, su ve 7–9 saat uyku.</span></div>';
+ let wm=document.getElementById('walkMinutes'),wp=document.getElementById('walkPace'),sm=document.getElementById('strengthMinutes');
+ wm.value=d.activity?.walk??'';wp.value=d.activity?.pace??'4.3';sm.value=d.activity?.strength??'';
+ function calc(save=false){let w=Number(wm.value)||0,pace=Number(wp.value)||4.3,st=Number(sm.value)||0;let kcal=(pace*3.5*75/200*w)+(4*3.5*75/200*st);document.getElementById('dayKcal').textContent=Math.round(kcal)+' kcal';document.getElementById('dashboardKcal').textContent=Math.round(kcal)+' kcal';if(save){recordUndo('aktivite / kalori kaydı');if(!data.days[selected])data.days[selected]={};data.days[selected].activity={walk:w,pace:wp.value,strength:st,kcal:Math.round(kcal)};localStorage.setItem(KEY,JSON.stringify(data));renderSummaryOnly()}}
+ [wm,wp,sm].forEach(el=>{el.oninput=()=>calc(false);el.onchange=()=>calc(true)});calc(false);
+ renderWater();
+ let host=document.getElementById('tasks');host.innerHTML='';taskData.forEach((t,i)=>{let label=document.createElement('label');label.className='task'+(d[i]?' done':'');let cb=document.createElement('input');cb.type='checkbox';cb.checked=!!d[i];cb.onchange=()=>{recordUndo(t[0]+' işaretlemesi');if(!data.days[selected])data.days[selected]={};data.days[selected][i]=cb.checked;persist()};let span=document.createElement('span'),b=document.createElement('b'),small=document.createElement('small');b.textContent=t[0];small.textContent=t[1];span.append(b,small);label.append(cb,span);host.append(label)});
+ let count=Object.values(d).filter((v,k)=>k!=='activity'&&v===true).length;let phase=selected<=7?'Alışma dönemi':selected<=14?'Düzen oluşturma':selected<=21?'Temponu artırma':'Devamlılık dönemi';document.getElementById('daySubtitle').textContent=selected+'. gün · '+phase;document.getElementById('todayLabel').textContent=selected+'. Gün';document.getElementById('metricTasks').textContent=count+' / 7';document.getElementById('todayPercent').textContent=Math.round(count/7*100)+'%';document.getElementById('todayProgress').style.width=(count/7*100)+'%';
+}
+function renderWater(){let ml=Math.max(0,Number(day(selected).waterMl)||0),goal=2300,pct=Math.min(100,Math.round(ml/goal*100));document.getElementById('waterAmount').textContent=ml.toLocaleString('tr-TR')+' / 2.300 ml';document.getElementById('waterPercent').textContent=pct+'%';document.getElementById('waterProgress').style.width=pct+'%'}
+function changeWater(delta){let current=Math.max(0,Number(day(selected).waterMl)||0),next=Math.max(0,current+delta);if(next===current)return;recordUndo('su miktarı değişikliği');if(!data.days[selected])data.days[selected]={};data.days[selected].waterMl=next;localStorage.setItem(KEY,JSON.stringify(data));renderWater()}
+document.getElementById('water250').onclick=()=>changeWater(250);
+document.getElementById('water500').onclick=()=>changeWater(500);
+document.getElementById('waterMinus').onclick=()=>changeWater(-250);
+function renderMeasures(){let body=document.getElementById('measureRows');body.innerHTML='';if(!data.measurements.length){body.innerHTML='<tr><td colspan="3" class="muted">Henüz ölçüm yok.</td></tr>';return}data.measurements.slice().reverse().forEach(m=>{let tr=document.createElement('tr');[m.date,m.weight?m.weight+' kg':'—',m.waist?m.waist+' cm':'—'].forEach(v=>{let td=document.createElement('td');td.textContent=v;tr.append(td)});body.append(tr)})}
+function renderSummaryOnly(){let done=completedDays(),count=Object.entries(day(selected)).filter(([k,v])=>k!=='activity'&&v===true).length;document.getElementById('metricDays').textContent=done+' / 30';document.getElementById('sideProgress').textContent=done+' / 30 gün tamamlandı';document.getElementById('progressText').textContent=done+' / 30 gün';document.getElementById('percent').textContent=Math.round(done/30*100)+'%';document.getElementById('mainProgress').style.width=(done/30*100)+'%';document.getElementById('metricTasks').textContent=count+' / 7';renderCalendar();document.getElementById('todayPercent').textContent=Math.round(count/7*100)+'%';document.getElementById('todayProgress').style.width=(count/7*100)+'%'}
+function render(){let done=completedDays(),count=Object.entries(day(selected)).filter(([k,v])=>k!=='activity'&&v===true).length;document.getElementById('metricDays').textContent=done+' / 30';document.getElementById('sideProgress').textContent=done+' / 30 gün tamamlandı';document.getElementById('progressText').textContent=done+' / 30 gün';document.getElementById('percent').textContent=Math.round(done/30*100)+'%';document.getElementById('mainProgress').style.width=(done/30*100)+'%';document.getElementById('metricTasks').textContent=count+' / 7';renderCalendar();renderDaily();renderMeasures();let ak=0;Object.values(data.days).forEach(x=>ak+=(Number(x.activity?.kcal)||0));document.getElementById('dashboardKcal').textContent=(Number(day(selected).activity?.kcal)||0)+' kcal';}
+document.getElementById('prev').onclick=()=>{selected=Math.max(1,selected-1);render()};
+document.getElementById('next').onclick=()=>{selected=Math.min(30,selected+1);render()};
+document.getElementById('saveMeasure').onclick=()=>{let w=document.getElementById('weight').value,wa=document.getElementById('waist').value;if(!w&&!wa){alert('Kilo veya bel ölçüsünden en az birini gir.');return}recordUndo('ölçüm ekleme');data.measurements.push({date:new Date().toLocaleDateString('tr-TR'),weight:w,waist:wa});document.getElementById('weight').value='';document.getElementById('waist').value='';persist()};
+document.getElementById('export').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mt-fit-yedek.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!x.days||!Array.isArray(x.measurements))throw Error();recordUndo('yedek içe aktarma');data=x;persist();alert('Yedek içe aktarıldı.')}catch(err){alert('Yedek dosyası okunamadı.')}e.target.value=''};
+document.getElementById('undoBtn').onclick=undoLast;
+document.getElementById('reset').onclick=()=>{if(confirm('Tüm işaretlemeler ve ölçümler silinsin mi?')){recordUndo('tüm verileri sıfırlama');data={days:{},measurements:[]};selected=1;persist()}};
+render();updateUndoUI();
+</script>
+</body></html>
