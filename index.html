@@ -224,7 +224,7 @@ body{background:radial-gradient(ellipse at 12% 0%,#102a35 0,transparent 36%),var
   <div class="login-error" id="modalPassError"></div>
  </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const KEY_PREFIX='MT_FIT_DATA_V2_';
 let KEY=KEY_PREFIX+'guest';
@@ -288,6 +288,7 @@ document.getElementById('reset').onclick=()=>{if(confirm('Tüm işaretlemeler ve
 // --- Local account layer (single-file edition) ---
 const ACCOUNTS_KEY='MT_FIT_ACCOUNTS_V1';
 let currentUser=null;
+function cloudSave(){} // Yerel modda buluta kayıt yapılmaz.
 function getAccounts(){
  let a={};
  try{a=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'{}')}catch(e){}
@@ -321,84 +322,30 @@ function enterApp(user){
  document.getElementById('adminNav').style.display=user.role==='admin'?'flex':'none';
  document.getElementById('changePassBtn').style.display=user.role==='admin'?'none':'inline-block';
  document.getElementById('syncStatus').textContent='● Yerel kayıt';
- document.getElementById('syncStatus').title='Bu tek dosyalı sürümde bulut senkronizasyonu bağlı değil.';
+ document.getElementById('syncStatus').title='Veriler yalnızca bu cihazda saklanır.';
  if(user.role==='admin'){go('admin');renderAdmin()}else{loadUserData(user.username);go('dashboard');render();updateUndoUI()}
 }
-const SUPABASE_URL='https://qlkfbhcewfqjzlluirjr.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_7qe8LAmyGZUUOFuKTuRHnQ_HnmNPA0h';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let cloudChannel=null, cloudBusy=false, cloudTimer=null;
-async function cloudSave(){
- if(!currentUser?.id || cloudBusy) return;
- clearTimeout(cloudTimer);
- cloudTimer=setTimeout(async()=>{
-  cloudBusy=true;
-  try{
-   const row={user_id:currentUser.id,record_type:'daily',record_date:'2000-01-01',payload:data,updated_at:new Date().toISOString()};
-   const {data:found,error:findErr}=await sb.from('health_records').select('id').eq('user_id',currentUser.id).eq('record_type','daily').eq('record_date','2000-01-01').limit(1);
-   if(findErr) throw findErr;
-   let result;
-   if(found?.length) result=await sb.from('health_records').update(row).eq('id',found[0].id);
-   else result=await sb.from('health_records').insert(row);
-   if(result.error) throw result.error;
-   document.getElementById('syncStatus').textContent='● Buluta kaydedildi';
-   document.getElementById('syncStatus').style.color='#67e6b3';
-  }catch(err){
-   document.getElementById('syncStatus').textContent='● Senkron hatası';
-   document.getElementById('syncStatus').title=err.message||'Supabase kayıt hatası';
-   document.getElementById('syncStatus').style.color='#ff9dab';
-  }finally{cloudBusy=false}
- },450);
-}
-async function cloudLoad(){
- const {data:rows,error}=await sb.from('health_records').select('id,payload,updated_at')
-  .eq('user_id',currentUser.id).eq('record_type','daily').eq('record_date','2000-01-01').limit(1);
- if(error) throw error;
- if(rows?.length && rows[0].payload){
-  data=rows[0].payload;
-  localStorage.setItem(KEY,JSON.stringify(data));
-  render();updateUndoUI();
- }else{
-  await cloudSave();
- }
- document.getElementById('syncStatus').textContent='● Bulut bağlı';
- document.getElementById('syncStatus').style.color='#67e6b3';
-}
-function startRealtime(){
- if(cloudChannel) sb.removeChannel(cloudChannel);
- cloudChannel=sb.channel('mtfit-'+currentUser.id)
- .on('postgres_changes',{event:'*',schema:'public',table:'health_records',filter:'user_id=eq.'+currentUser.id},payload=>{
-   if(cloudBusy) return;
-   const row=payload.new;
-   if(row?.record_type==='daily' && row?.record_date==='2000-01-01' && row.payload){
-    data=row.payload;localStorage.setItem(KEY,JSON.stringify(data));render();updateUndoUI();
-    document.getElementById('syncStatus').textContent='● Diğer cihazdan güncellendi';
-   }
- }).subscribe();
-}
+// Yerel mod: giriş ve kayıtlar yalnızca bu cihazın tarayıcısında tutulur.
+async function verifyPassword(value,hash){return (await hashPassword(value))===hash}
 document.getElementById('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();
  const username=document.getElementById('loginUsername').value.trim().toLowerCase();
  const password=document.getElementById('loginPassword').value;
  const errBox=document.getElementById('loginError');
- errBox.textContent='Giriş yapılıyor…';
+ errBox.textContent='Kontrol ediliyor…';
  try{
-  const response=await fetch(SUPABASE_URL+'/functions/v1/username-login',{
-   method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY},
-   body:JSON.stringify({username,password})
-  });
-  const result=await response.json();
-  if(!response.ok) throw new Error(result.error||'Giriş başarısız.');
-  const {error:setErr}=await sb.auth.setSession({access_token:result.session.access_token,refresh_token:result.session.refresh_token});
-  if(setErr) throw setErr;
-  currentUser={id:result.user.id,username:result.user.username,role:result.user.role};
-  KEY=KEY_PREFIX+username;data=readData();selected=1;
+  await seedAdmin();
+  const accounts=getAccounts(),account=accounts[username];
+  if(!account||!account.active||!await verifyPassword(password,account.hash)){
+   errBox.textContent='Kullanıcı adı veya şifre hatalı.';return;
+  }
+  currentUser={username:account.username,role:account.role||'user'};
+  if(currentUser.role!=='admin')loadUserData(username);
   enterApp(currentUser);
-  await cloudLoad();startRealtime();
   document.getElementById('loginPassword').value='';
- }catch(err){errBox.textContent=err.message||'Supabase bağlantısı kurulamadı.'}
+ }catch(err){errBox.textContent='Giriş yapılamadı: '+(err.message||'Bilinmeyen hata')}
 });
-document.getElementById('logoutBtn').onclick=async()=>{if(cloudChannel){await sb.removeChannel(cloudChannel);cloudChannel=null}await sb.auth.signOut();currentUser=null;showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
+document.getElementById('logoutBtn').onclick=()=>{currentUser=null;showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
 document.getElementById('changePassBtn').onclick=()=>{document.getElementById('passwordModal').style.display='grid';document.getElementById('modalPassError').textContent=''};
 document.getElementById('modalSavePass').onclick=async()=>{
  const p=document.getElementById('modalNewPass').value,c=document.getElementById('modalConfirmPass').value;
@@ -432,16 +379,12 @@ document.getElementById('addUserBtn').onclick=async()=>{
  const msg=document.getElementById('adminMessage');
  if(!/^[a-z0-9_.-]{3,24}$/.test(name)){msg.textContent='Kullanıcı adı 3–24 karakter olmalı; harf, rakam, nokta, tire ve alt çizgi kullanılabilir.';return}
  if(name==='admin'||pass.length<6){msg.textContent='Bu kullanıcı adı kullanılamaz veya şifre 6 karakterden kısa.';return}
- try{
-  const {data:sessionData}=await sb.auth.getSession();
-  const {data:created,error}=await sb.functions.invoke('admin-create-user',{body:{username:name,password:pass}});
-  if(error) throw error;
-  if(created?.error) throw new Error(created.error);
-  document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
-  msg.textContent='Kullanıcı oluşturuldu: '+name+' (bulut hesabı)';
-  renderAdmin();
- }catch(err){msg.textContent='Kullanıcı oluşturulamadı: '+(err.message||'Edge Function gerekli.')}
-
+ const a=getAccounts();
+ if(a[name]){msg.textContent='Bu kullanıcı adı zaten kayıtlı.';return}
+ a[name]={username:name,hash:await hashPassword(pass),active:true,role:'user',createdAt:new Date().toISOString()};
+ await saveAccounts(a);
+ document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
+ msg.textContent='Kullanıcı oluşturuldu: '+name+' (bu cihazda)';renderAdmin();
 };
 async function adminResetUser(name){
  const pass=prompt(name+' için yeni şifreyi gir (en az 6 karakter):');
@@ -466,6 +409,6 @@ go=function(id){
  originalGo(id);
  if(id==='admin')renderAdmin();
 };
-showLogin();
+seedAdmin().then(()=>showLogin()).catch(()=>showLogin('Yerel hesap başlatılamadı.'));
 </script>
 </body></html>
