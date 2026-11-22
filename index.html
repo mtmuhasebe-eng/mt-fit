@@ -224,6 +224,7 @@ body{background:radial-gradient(ellipse at 12% 0%,#102a35 0,transparent 36%),var
   <div class="login-error" id="modalPassError"></div>
  </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const KEY_PREFIX='MT_FIT_DATA_V2_';
 let KEY=KEY_PREFIX+'guest';
@@ -233,9 +234,9 @@ let data={days:{},measurements:[]},selected=1;
 const undoStack=[];
 function recordUndo(label){undoStack.push({snapshot:JSON.stringify(data),label});if(undoStack.length>30)undoStack.shift();updateUndoUI()}
 function updateUndoUI(){const b=document.getElementById('undoBtn'),l=document.getElementById('undoLabel');if(!b||!l)return;b.disabled=!undoStack.length;l.textContent=undoStack.length?('Son işlem: '+undoStack[undoStack.length-1].label):'Henüz işlem yok'}
-function undoLast(){if(!undoStack.length)return;const item=undoStack.pop();data=JSON.parse(item.snapshot);localStorage.setItem(KEY,JSON.stringify(data));updateUndoUI();render();const l=document.getElementById('undoLabel');l.textContent='Geri alındı: '+item.label}
+function undoLast(){if(!undoStack.length)return;const item=undoStack.pop();data=JSON.parse(item.snapshot);localStorage.setItem(KEY,JSON.stringify(data));updateUndoUI();render();cloudSave();const l=document.getElementById('undoLabel');l.textContent='Geri alındı: '+item.label}
 function readData(){try{return JSON.parse(localStorage.getItem(KEY))||{days:{},measurements:[]}}catch(e){return{days:{},measurements:[]}}}
-function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render();cloudSave()}
 function day(n){return data.days[n]||{}}
 function completedDays(){let c=0;for(let i=1;i<=30;i++)if(Object.entries(day(i)).filter(([k,v])=>k!=='activity'&&v===true).length>=5)c++;return c}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));let names={dashboard:'Genel Bakış',daily:'Günlük Takip',measure:'Ölçümlerim',plan:'Programım',admin:'Yönetim'};document.getElementById('crumb').textContent=names[id];window.scrollTo({top:0,behavior:'smooth'});if(id==='daily')renderDaily()}
@@ -252,14 +253,14 @@ function renderDaily(){
  '<div class="planline"><b>3. Beslenme ve toparlanma</b><span class="muted">Protein içeren dengeli öğünler, sebze, su ve 7–9 saat uyku.</span></div>';
  let wm=document.getElementById('walkMinutes'),wp=document.getElementById('walkPace'),sm=document.getElementById('strengthMinutes');
  wm.value=d.activity?.walk??'';wp.value=d.activity?.pace??'4.3';sm.value=d.activity?.strength??'';
- function calc(save=false){let w=Number(wm.value)||0,pace=Number(wp.value)||4.3,st=Number(sm.value)||0;let kcal=(pace*3.5*75/200*w)+(4*3.5*75/200*st);document.getElementById('dayKcal').textContent=Math.round(kcal)+' kcal';document.getElementById('dashboardKcal').textContent=Math.round(kcal)+' kcal';if(save){recordUndo('aktivite / kalori kaydı');if(!data.days[selected])data.days[selected]={};data.days[selected].activity={walk:w,pace:wp.value,strength:st,kcal:Math.round(kcal)};localStorage.setItem(KEY,JSON.stringify(data));renderSummaryOnly()}}
+ function calc(save=false){let w=Number(wm.value)||0,pace=Number(wp.value)||4.3,st=Number(sm.value)||0;let kcal=(pace*3.5*75/200*w)+(4*3.5*75/200*st);document.getElementById('dayKcal').textContent=Math.round(kcal)+' kcal';document.getElementById('dashboardKcal').textContent=Math.round(kcal)+' kcal';if(save){recordUndo('aktivite / kalori kaydı');if(!data.days[selected])data.days[selected]={};data.days[selected].activity={walk:w,pace:wp.value,strength:st,kcal:Math.round(kcal)};localStorage.setItem(KEY,JSON.stringify(data));renderSummaryOnly();cloudSave()}}
  [wm,wp,sm].forEach(el=>{el.oninput=()=>calc(false);el.onchange=()=>calc(true)});calc(false);
  renderWater();
  let host=document.getElementById('tasks');host.innerHTML='';taskData.forEach((t,i)=>{let label=document.createElement('label');label.className='task'+(d[i]?' done':'');let cb=document.createElement('input');cb.type='checkbox';cb.checked=!!d[i];cb.onchange=()=>{recordUndo(t[0]+' işaretlemesi');if(!data.days[selected])data.days[selected]={};data.days[selected][i]=cb.checked;persist()};let span=document.createElement('span'),b=document.createElement('b'),small=document.createElement('small');b.textContent=t[0];small.textContent=t[1];span.append(b,small);label.append(cb,span);host.append(label)});
  let count=Object.values(d).filter((v,k)=>k!=='activity'&&v===true).length;let phase=selected<=7?'Alışma dönemi':selected<=14?'Düzen oluşturma':selected<=21?'Temponu artırma':'Devamlılık dönemi';document.getElementById('daySubtitle').textContent=selected+'. gün · '+phase;document.getElementById('todayLabel').textContent=selected+'. Gün';document.getElementById('metricTasks').textContent=count+' / 7';document.getElementById('todayPercent').textContent=Math.round(count/7*100)+'%';document.getElementById('todayProgress').style.width=(count/7*100)+'%';
 }
 function renderWater(){let ml=Math.max(0,Number(day(selected).waterMl)||0),goal=2300,pct=Math.min(100,Math.round(ml/goal*100));document.getElementById('waterAmount').textContent=ml.toLocaleString('tr-TR')+' / 2.300 ml';document.getElementById('waterPercent').textContent=pct+'%';document.getElementById('waterProgress').style.width=pct+'%'}
-function changeWater(delta){let current=Math.max(0,Number(day(selected).waterMl)||0),next=Math.max(0,current+delta);if(next===current)return;recordUndo('su miktarı değişikliği');if(!data.days[selected])data.days[selected]={};data.days[selected].waterMl=next;localStorage.setItem(KEY,JSON.stringify(data));renderWater();const wp=document.getElementById('waterProgress');wp.classList.remove('water-burst');void wp.offsetWidth;wp.classList.add('water-burst')}
+function changeWater(delta){let current=Math.max(0,Number(day(selected).waterMl)||0),next=Math.max(0,current+delta);if(next===current)return;recordUndo('su miktarı değişikliği');if(!data.days[selected])data.days[selected]={};data.days[selected].waterMl=next;localStorage.setItem(KEY,JSON.stringify(data));cloudSave();renderWater();const wp=document.getElementById('waterProgress');wp.classList.remove('water-burst');void wp.offsetWidth;wp.classList.add('water-burst')}
 document.getElementById('water250').onclick=()=>changeWater(250);
 document.getElementById('water500').onclick=()=>changeWater(500);
 document.getElementById('waterMinus').onclick=()=>changeWater(-250);
@@ -323,18 +324,81 @@ function enterApp(user){
  document.getElementById('syncStatus').title='Bu tek dosyalı sürümde bulut senkronizasyonu bağlı değil.';
  if(user.role==='admin'){go('admin');renderAdmin()}else{loadUserData(user.username);go('dashboard');render();updateUndoUI()}
 }
+const SUPABASE_URL='https://qlkfbhcewfqjzlluirjr.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_7qe8LAmyGZUUOFuKTuRHnQ_HnmNPA0h';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let cloudChannel=null, cloudBusy=false, cloudTimer=null;
+async function cloudSave(){
+ if(!currentUser?.id || cloudBusy) return;
+ clearTimeout(cloudTimer);
+ cloudTimer=setTimeout(async()=>{
+  cloudBusy=true;
+  try{
+   const row={user_id:currentUser.id,record_type:'daily',record_date:'2000-01-01',payload:data,updated_at:new Date().toISOString()};
+   const {data:found,error:findErr}=await sb.from('health_records').select('id').eq('user_id',currentUser.id).eq('record_type','daily').eq('record_date','2000-01-01').limit(1);
+   if(findErr) throw findErr;
+   let result;
+   if(found?.length) result=await sb.from('health_records').update(row).eq('id',found[0].id);
+   else result=await sb.from('health_records').insert(row);
+   if(result.error) throw result.error;
+   document.getElementById('syncStatus').textContent='● Buluta kaydedildi';
+   document.getElementById('syncStatus').style.color='#67e6b3';
+  }catch(err){
+   document.getElementById('syncStatus').textContent='● Senkron hatası';
+   document.getElementById('syncStatus').title=err.message||'Supabase kayıt hatası';
+   document.getElementById('syncStatus').style.color='#ff9dab';
+  }finally{cloudBusy=false}
+ },450);
+}
+async function cloudLoad(){
+ const {data:rows,error}=await sb.from('health_records').select('id,payload,updated_at')
+  .eq('user_id',currentUser.id).eq('record_type','daily').eq('record_date','2000-01-01').limit(1);
+ if(error) throw error;
+ if(rows?.length && rows[0].payload){
+  data=rows[0].payload;
+  localStorage.setItem(KEY,JSON.stringify(data));
+  render();updateUndoUI();
+ }else{
+  await cloudSave();
+ }
+ document.getElementById('syncStatus').textContent='● Bulut bağlı';
+ document.getElementById('syncStatus').style.color='#67e6b3';
+}
+function startRealtime(){
+ if(cloudChannel) sb.removeChannel(cloudChannel);
+ cloudChannel=sb.channel('mtfit-'+currentUser.id)
+ .on('postgres_changes',{event:'*',schema:'public',table:'health_records',filter:'user_id=eq.'+currentUser.id},payload=>{
+   if(cloudBusy) return;
+   const row=payload.new;
+   if(row?.record_type==='daily' && row?.record_date==='2000-01-01' && row.payload){
+    data=row.payload;localStorage.setItem(KEY,JSON.stringify(data));render();updateUndoUI();
+    document.getElementById('syncStatus').textContent='● Diğer cihazdan güncellendi';
+   }
+ }).subscribe();
+}
 document.getElementById('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();
  const username=document.getElementById('loginUsername').value.trim().toLowerCase();
  const password=document.getElementById('loginPassword').value;
- const a=getAccounts(),u=a[username];
- if(!u||!u.active){document.getElementById('loginError').textContent='Kullanıcı adı veya şifre hatalı ya da hesap pasif.';return}
- const hash=await hashPassword(password);
- if(hash!==u.hash){document.getElementById('loginError').textContent='Kullanıcı adı veya şifre hatalı.';return}
- enterApp({username:u.username,role:u.role});
- document.getElementById('loginPassword').value='';
+ const errBox=document.getElementById('loginError');
+ errBox.textContent='Giriş yapılıyor…';
+ try{
+  const response=await fetch(SUPABASE_URL+'/functions/v1/username-login',{
+   method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY},
+   body:JSON.stringify({username,password})
+  });
+  const result=await response.json();
+  if(!response.ok) throw new Error(result.error||'Giriş başarısız.');
+  const {error:setErr}=await sb.auth.setSession({access_token:result.session.access_token,refresh_token:result.session.refresh_token});
+  if(setErr) throw setErr;
+  currentUser={id:result.user.id,username:result.user.username,role:result.user.role};
+  KEY=KEY_PREFIX+username;data=readData();selected=1;
+  enterApp(currentUser);
+  await cloudLoad();startRealtime();
+  document.getElementById('loginPassword').value='';
+ }catch(err){errBox.textContent=err.message||'Supabase bağlantısı kurulamadı.'}
 });
-document.getElementById('logoutBtn').onclick=()=>{currentUser=null;showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
+document.getElementById('logoutBtn').onclick=async()=>{if(cloudChannel){await sb.removeChannel(cloudChannel);cloudChannel=null}await sb.auth.signOut();currentUser=null;showLogin();document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value=''};
 document.getElementById('changePassBtn').onclick=()=>{document.getElementById('passwordModal').style.display='grid';document.getElementById('modalPassError').textContent=''};
 document.getElementById('modalSavePass').onclick=async()=>{
  const p=document.getElementById('modalNewPass').value,c=document.getElementById('modalConfirmPass').value;
@@ -368,10 +432,16 @@ document.getElementById('addUserBtn').onclick=async()=>{
  const msg=document.getElementById('adminMessage');
  if(!/^[a-z0-9_.-]{3,24}$/.test(name)){msg.textContent='Kullanıcı adı 3–24 karakter olmalı; harf, rakam, nokta, tire ve alt çizgi kullanılabilir.';return}
  if(name==='admin'||pass.length<6){msg.textContent='Bu kullanıcı adı kullanılamaz veya şifre 6 karakterden kısa.';return}
- const a=getAccounts();if(a[name]){msg.textContent='Bu kullanıcı adı zaten mevcut.';return}
- a[name]={username:name,hash:await hashPassword(pass),active:true,role:'user',createdAt:new Date().toISOString()};
- await saveAccounts(a);document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
- msg.textContent='Kullanıcı oluşturuldu: '+name;renderAdmin();
+ try{
+  const {data:sessionData}=await sb.auth.getSession();
+  const {data:created,error}=await sb.functions.invoke('admin-create-user',{body:{username:name,password:pass}});
+  if(error) throw error;
+  if(created?.error) throw new Error(created.error);
+  document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
+  msg.textContent='Kullanıcı oluşturuldu: '+name+' (bulut hesabı)';
+  renderAdmin();
+ }catch(err){msg.textContent='Kullanıcı oluşturulamadı: '+(err.message||'Edge Function gerekli.')}
+
 };
 async function adminResetUser(name){
  const pass=prompt(name+' için yeni şifreyi gir (en az 6 karakter):');
@@ -396,6 +466,6 @@ go=function(id){
  originalGo(id);
  if(id==='admin')renderAdmin();
 };
-seedAdmin().then(()=>showLogin());
+showLogin();
 </script>
 </body></html>
